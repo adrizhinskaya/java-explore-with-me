@@ -1,11 +1,16 @@
 package ru.practicum.client;
 
-import ru.practicum.dto.EndpointHitDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.ViewStats;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -13,12 +18,12 @@ import reactor.core.publisher.Mono;
 public class StatsWebClient implements StatsClient {
     private final WebClient webClient;
 
-    public StatsWebClient(String uri) {
-        this.webClient = WebClient.create(uri);
+    public StatsWebClient() {
+        this.webClient = WebClient.create("http://localhost:9090");
     }
 
     @Override
-    public void postStats(String app, String uri, String ip, String timestamp) {
+    public void postStats(String app, String uri, String ip, LocalDateTime timestamp) {
         webClient.post()
                 .uri("/hit")
                 .contentType(MediaType.APPLICATION_JSON)
