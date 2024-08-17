@@ -22,7 +22,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Slf4j
 public class StatsController {
-    private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final StatsService statsService;
 
     @PostMapping("/hit")
@@ -40,8 +40,8 @@ public class StatsController {
                                   boolean unique) {
 
         uris = uris == null ? Collections.emptySet() : uris;
-        LocalDateTime startTime = LocalDateTime.parse(start, FORMATTER);
-        LocalDateTime endTime = LocalDateTime.parse(end, FORMATTER);
+        LocalDateTime startTime = LocalDateTime.parse(start, formatter);
+        LocalDateTime endTime = LocalDateTime.parse(end, formatter);
         String url = String.format("STATS-SERVER /stats?start={%s}&end{%s}&uris{%s}&unique{%s}",
                 start, end, uris.toString(), unique);
         ColoredCRUDLogger.logGet(url);
