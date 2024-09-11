@@ -1,24 +1,23 @@
 package ru.practicum.event.model.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import ru.practicum.location.Location;
 
 import java.time.LocalDateTime;
 
-//@AllArgsConstructor
-//@NoArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@ToString
 public class NewEventDto {
-    @NotNull
+    @NotBlank
     @Size(min = 20, message = "{validation.annotation.size.too_short}")
     @Size(max = 2000, message = "{validation.annotation.size.too_long}")
     private String annotation;
     @NotNull
     private Long category;
-    @NotNull
+    @NotBlank
     @Size(min = 20, message = "{validation.annotation.size.too_short}")
     @Size(max = 7000, message = "{validation.annotation.size.too_long}")
     private String description;
@@ -28,9 +27,10 @@ public class NewEventDto {
     @NotNull
     private Location location;
     private Boolean paid;
+    @Positive
     private Integer participantLimit;
     private Boolean requestModeration;
-    @NotNull
+    @NotBlank
     @Size(min = 3, message = "{validation.annotation.size.too_short}")
     @Size(max = 120, message = "{validation.annotation.size.too_long}")
     private String title;

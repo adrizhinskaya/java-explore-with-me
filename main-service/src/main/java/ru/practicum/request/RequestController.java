@@ -1,0 +1,52 @@
+package ru.practicum.request;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.logger.ColoredCRUDLogger;
+import ru.practicum.request.model.dto.EventRequestStatusUpdateRequest;
+import ru.practicum.request.model.dto.EventRequestStatusUpdateResult;
+import ru.practicum.request.model.dto.ParticipationRequestDto;
+
+@RestController
+@RequiredArgsConstructor
+@Validated
+@Slf4j
+public class RequestController {
+    private final RequestService requestService;
+
+    @PostMapping("/users/{userId}/requests")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ParticipationRequestDto create(@PathVariable Long userId,
+                                          @RequestParam Long eventId) {
+        String url = String.format("MAIN /users/{%s}/requests?eventId={%s}", userId, eventId);
+        ColoredCRUDLogger.logPost(url);
+        ParticipationRequestDto result = requestService.create(userId, eventId);
+        ColoredCRUDLogger.logPostComplete(url, result.toString());
+        return result;
+    }
+
+    @PatchMapping("/users/{userId}/requests/{requestId}/cancel")
+    public ParticipationRequestDto cancelRequest(@PathVariable Long userId,
+                                                 @PathVariable Long requestId) {
+        String url = String.format("MAIN /users/{%s}/requests/{%s}/cancel", userId, requestId);
+        ColoredCRUDLogger.logPatch(url);
+        ParticipationRequestDto result = requestService.cancelRequest(userId, requestId);
+        ColoredCRUDLogger.logPatchComplete(url, result.toString());
+        return result;
+    }
+
+    @PatchMapping("/users/{userId}/events/{eventId}/requests")
+    public EventRequestStatusUpdateResult update(@PathVariable Long userId,
+                                                 @PathVariable Long eventId,
+                                                 @Validated @RequestBody EventRequestStatusUpdateRequest request) {
+        String url = String.format("MAIN /users/{%s}/events/{%s}/requests", userId, eventId);
+        ColoredCRUDLogger.logPatch(url, request.toString());
+        EventRequestStatusUpdateResult result = requestService.update(userId, eventId, request);
+        ColoredCRUDLogger.logPatchComplete(url, result.toString());
+        return result;
+    }
+
+}

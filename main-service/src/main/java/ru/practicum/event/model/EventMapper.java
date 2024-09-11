@@ -6,6 +6,7 @@ import ru.practicum.categorie.model.CategoryEntity;
 import ru.practicum.categorie.model.CategoryMapper;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.event.model.dto.EventFullDto;
+import ru.practicum.event.model.dto.EventShortDto;
 import ru.practicum.event.model.dto.NewEventDto;
 import ru.practicum.location.LocationEntity;
 import ru.practicum.location.LocationMapper;
@@ -34,7 +35,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventFullDto mapToEventDto(EventEntity eventEntity) {
+    public static EventFullDto mapToEventFullDto(EventEntity eventEntity) {
         return EventFullDto.builder()
                 .id(eventEntity.getId())
                 .annotation(eventEntity.getAnnotation())
@@ -55,10 +56,33 @@ public class EventMapper {
                 .build();
     }
 
-    public static List<EventFullDto> mapToEventDto(Iterable<EventEntity> eventEntities) {
+    public static List<EventFullDto> mapToEventFullDto(Iterable<EventEntity> eventEntities) {
         List<EventFullDto> dtos = new ArrayList<>();
         for (EventEntity entity : eventEntities) {
-            dtos.add(mapToEventDto(entity));
+            dtos.add(mapToEventFullDto(entity));
+        }
+        return dtos;
+    }
+
+
+    public static EventShortDto mapToEventShortDto(EventEntity eventEntity) {
+        return EventShortDto.builder()
+                .id(eventEntity.getId())
+                .annotation(eventEntity.getAnnotation())
+                .category(CategoryMapper.mapToCategoryDto(eventEntity.getCategory()))
+                .confirmedRequests(eventEntity.getConfirmedRequests())
+                .eventDate(eventEntity.getEventDate())
+                .initiator(UserMapper.mapToUserShortDto(eventEntity.getInitiator()))
+                .paid(eventEntity.getPaid())
+                .title(eventEntity.getTitle())
+                .views(eventEntity.getViews())
+                .build();
+    }
+
+    public static List<EventShortDto> mapToEventShortDto(Iterable<EventEntity> eventEntities) {
+        List<EventShortDto> dtos = new ArrayList<>();
+        for (EventEntity entity : eventEntities) {
+            dtos.add(mapToEventShortDto(entity));
         }
         return dtos;
     }

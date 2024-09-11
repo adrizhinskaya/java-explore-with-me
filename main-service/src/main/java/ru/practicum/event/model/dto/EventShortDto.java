@@ -1,30 +1,25 @@
 package ru.practicum.event.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.user.model.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 
+@Builder
+@ToString
+@Getter
 public class EventShortDto {
-    @NotNull
-    @NotBlank
+    private Long id;
     private String annotation;
-    @NotNull
     private CategoryDto category;
     private Long confirmedRequests;
-    @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
-    private Long id;
-    @NotNull
     private UserShortDto initiator;
-    @NotNull
     private Boolean paid;
-    @NotNull
-    @NotBlank
     private String title;
     private Long views;
 }

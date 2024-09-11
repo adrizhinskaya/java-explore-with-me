@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
+import lombok.ToString;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.event.model.EventState;
 import ru.practicum.location.Location;
@@ -12,6 +13,7 @@ import ru.practicum.user.model.dto.UserShortDto;
 import java.time.LocalDateTime;
 
 @Builder
+@ToString
 public class EventFullDto {
     private Long id;
     @NotNull

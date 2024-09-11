@@ -2,9 +2,7 @@ package ru.practicum.event.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.categorie.model.CategoryEntity;
 import ru.practicum.location.Location;
 import ru.practicum.location.LocationEntity;
@@ -17,6 +15,8 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,15 +31,16 @@ public class EventEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
     private String description;
-    @Column(name = "event_date", nullable = false)
+    @Column(name = "event_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id")
     private UserEntity initiator;
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private LocationEntity location;
-    private Boolean paid;
+    private Boolean paid;//
     @Column(name = "participant_limit")
     private Integer participantLimit;
     @Column(name = "published_on")

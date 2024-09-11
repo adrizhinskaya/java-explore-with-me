@@ -6,6 +6,7 @@ import ru.practicum.categorie.model.CategoryEntity;
 import ru.practicum.categorie.model.CategoryMapper;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.categorie.model.dto.NewCategoryDto;
+import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.pagination.PaginationHelper;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private CategoryEntity categoryExistCheck(Long catId) {
         return categoryRepository.findById(catId).orElseThrow(() ->
-                new RuntimeException("Категория не найдена"));
+                new EntityNotFoundException("Category not found"));
     }
 
     @Override

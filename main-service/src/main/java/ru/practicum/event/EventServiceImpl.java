@@ -10,17 +10,21 @@ import ru.practicum.location.Location;
 import ru.practicum.location.LocationEntity;
 import ru.practicum.location.LocationMapper;
 import ru.practicum.location.LocationRepository;
+import ru.practicum.pagination.PaginationHelper;
 import ru.practicum.user.UserRepository;
 import ru.practicum.user.model.UserEntity;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-public class EventServiceImpl {
-    UserRepository userRepository;
-    CategoryRepository categoryRepository;
-    EventRepository eventRepository;
-    LocationRepository locationRepository;
+public class EventServiceImpl implements EventService {
+    private final EventRepository eventRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final LocationRepository locationRepository;
 
     private UserEntity userExistCheck(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
@@ -42,14 +46,16 @@ public class EventServiceImpl {
                 new RuntimeException("Событие не найдено"));
     }
 
+    @Override
     public EventFullDto create(Long userId, NewEventDto newEventDto) {
         UserEntity user = userExistCheck(userId);
         CategoryEntity category = categoryExistCheck(newEventDto.getCategory());
         LocationEntity location = getOrCreateLocation(newEventDto.getLocation());
         EventEntity entity = eventRepository.save(EventMapper.mapToEventEntity(newEventDto, category, user, location));
-        return EventMapper.mapToEventDto(entity);
+        return EventMapper.mapToEventFullDto(entity);
     }
 
+    @Override
     public EventFullDto update(Long userId, Long eventId, UpdateEventUserRequest updateEvent) {
         UserEntity user = userExistCheck(userId);
         EventEntity event = eventExistCheck(eventId);
@@ -77,9 +83,10 @@ public class EventServiceImpl {
         }
 
         EventEntity entity = eventRepository.save(updateEntityFields(event, updateEvent));
-        return EventMapper.mapToEventDto(entity);
+        return EventMapper.mapToEventFullDto(entity);
     }
 
+    @Override
     public EventFullDto update(Long eventId, UpdateEventAdminRequest updateEvent) {
         EventEntity event = eventExistCheck(eventId);
         AdminStateAction state = updateEvent.getStateAction();
@@ -97,7 +104,32 @@ public class EventServiceImpl {
             }
         }
         EventEntity entity = eventRepository.save(updateEntityFields(event, updateEvent));
-        return EventMapper.mapToEventDto(entity);
+        return EventMapper.mapToEventFullDto(entity);
+    }
+
+    @Override
+    public List<EventShortDto> getAllByInitiator(Long userId, Integer from, Integer size) {
+        userExistCheck(userId);
+        PaginationHelper<EventEntity> paginationHelper = new PaginationHelper<>(from, size);
+        List<EventEntity> entities = paginationHelper.findAllWithPagination(eventRepository::findAllByInitiatorId, userId);
+        return EventMapper.mapToEventShortDto(entities);
+    }
+
+    @Override
+    public EventFullDto getByInitiator(Long userId, Long eventId) {
+        userExistCheck(userId);
+        EventEntity entity = eventRepository.findByIdAndInitiatorId(eventId, userId)
+                .orElseThrow(() -> new RuntimeException("События не существует"));
+        return EventMapper.mapToEventFullDto(entity);
+    }
+
+    @Override
+    public List<EventShortDto> getAll(String text, Set<Long> categories, Boolean paid,
+                                      LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable,
+                                      String sort, int from, int size) {
+        PaginationHelper<EventEntity> paginationHelper = new PaginationHelper<>(from, size);
+        List<EventEntity> entities = paginationHelper.findAllWithPagination(eventRepository::findAll);
+        return EventMapper.mapToEventShortDto(entities);
     }
 
     private EventEntity updateEntityFields(EventEntity event, UpdateEventRequest updated) {

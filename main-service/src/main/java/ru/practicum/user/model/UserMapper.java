@@ -2,7 +2,7 @@ package ru.practicum.user.model;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import ru.practicum.user.model.dto.NewUserDto;
+import ru.practicum.user.model.dto.NewUserRequest;
 import ru.practicum.user.model.dto.UserDto;
 import ru.practicum.user.model.dto.UserShortDto;
 
@@ -11,10 +11,10 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserMapper {
-    public static UserEntity mapToUserEntity(NewUserDto newUserDto) {
+    public static UserEntity mapToUserEntity(NewUserRequest newUserRequest) {
         return UserEntity.builder()
-                .name(newUserDto.getName())
-                .email(newUserDto.getEmail())
+                .name(newUserRequest.getName())
+                .email(newUserRequest.getEmail())
                 .build();
     }
 
