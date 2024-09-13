@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.event.model.EventMapper;
 import ru.practicum.event.model.dto.*;
+import ru.practicum.event.model.param.EventParam;
 import ru.practicum.logger.ColoredCRUDLogger;
 
 import java.time.LocalDateTime;
@@ -63,11 +65,20 @@ public class EventController {
     }
 
     @GetMapping("/users/{userId}/events/{eventId}")
-    public EventFullDto getByInitiator(@PathVariable Long userId,
+    public EventFullDto getByIdAndInitiator(@PathVariable Long userId,
                                        @PathVariable Long eventId) {
         String url = String.format("MAIN /users/{%s}/events/{%s}", userId, eventId);
         ColoredCRUDLogger.logGet(url);
-        EventFullDto result = eventService.getByInitiator(userId, eventId);
+        EventFullDto result = eventService.getByIdAndInitiator(userId, eventId);
+        ColoredCRUDLogger.logGetComplete(url, result.toString());
+        return result;
+    }
+
+    @GetMapping("/events/{id}")
+    public EventFullDto getById(@PathVariable Long id) {
+        String url = String.format("MAIN /events/{%s}", id);
+        ColoredCRUDLogger.logGet(url);
+        EventFullDto result = eventService.getById(id);
         ColoredCRUDLogger.logGetComplete(url, result.toString());
         return result;
     }
@@ -85,8 +96,8 @@ public class EventController {
         String url = String.format("MAIN /events?{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}",
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         ColoredCRUDLogger.logGet(url);
-        List<EventShortDto> result = eventService
-                .getAll(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        EventParam param = EventMapper.mapToEventParam(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
+        List<EventShortDto> result = eventService.getAll(param);
         ColoredCRUDLogger.logGetComplete(url, "size = " + result.size());
         return result;
     }

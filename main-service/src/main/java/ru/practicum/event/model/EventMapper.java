@@ -4,18 +4,19 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.categorie.model.CategoryEntity;
 import ru.practicum.categorie.model.CategoryMapper;
-import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.event.model.dto.EventFullDto;
 import ru.practicum.event.model.dto.EventShortDto;
 import ru.practicum.event.model.dto.NewEventDto;
+import ru.practicum.event.model.param.EventParam;
 import ru.practicum.location.LocationEntity;
 import ru.practicum.location.LocationMapper;
 import ru.practicum.user.model.UserEntity;
 import ru.practicum.user.model.UserMapper;
-import ru.practicum.user.model.dto.UserShortDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
@@ -85,5 +86,27 @@ public class EventMapper {
             dtos.add(mapToEventShortDto(entity));
         }
         return dtos;
+    }
+
+    public static EventParam mapToEventParam(String text,
+                                             Set<Long> categories,
+                                             Boolean paid,
+                                             LocalDateTime rangeStart,
+                                             LocalDateTime rangeEnd,
+                                             Boolean onlyAvailable,
+                                             String sort,
+                                             Integer from,
+                                             Integer size) {
+        return EventParam.builder()
+                .text(text)
+                .categories(categories)
+                .paid(paid)
+                .rangeStart(rangeStart)
+                .rangeEnd(rangeEnd)
+                .onlyAvailable(onlyAvailable != null ? onlyAvailable : false)
+                .sort(sort)
+                .from(from != null ? from : 0)
+                .size(size != null ? size : 10)
+                .build();
     }
 }

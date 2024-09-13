@@ -2,6 +2,7 @@ package ru.practicum.request;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.categorie.model.CategoryMapper;
 import ru.practicum.event.EventRepository;
 import ru.practicum.event.model.EventEntity;
 import ru.practicum.event.model.EventState;
@@ -130,6 +131,24 @@ public class RequestServiceImpl implements RequestService {
         }
         return result;
     }
+
+    @Override
+    public List<ParticipationRequestDto> getAllByRequester(Long userId) {
+        userExistCheck(userId);
+        return RequestMapper.mapToParticipationRequestDto(requestRepository.findAllByRequester_id(userId));
+    }
+
+    @Override
+    public List<ParticipationRequestDto> getAllByInitiatorAndEvent(Long userId, Long eventId) {
+        userExistCheck(userId);
+        EventEntity event = eventExistCheck(eventId);
+        if(!Objects.equals(userId, event.getInitiator().getId())) {
+            throw new RuntimeException("Пользователь не создатель события");
+        }
+        List<RequestEntity> requests = requestRepository.findByInitiator_idAndEvent_id(userId, eventId);
+        return RequestMapper.mapToParticipationRequestDto(requests);
+    }
+
 
     private void rejectRequest(RequestEntity entity) {
         if (entity.getStatus() != EventState.PENDING) {

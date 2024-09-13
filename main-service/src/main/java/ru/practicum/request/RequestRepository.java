@@ -10,4 +10,6 @@ import java.util.Set;
 public interface RequestRepository extends JpaRepository<RequestEntity, Long> {
     List<RequestEntity> findAllByIdIn(Set<Long> ids);
     Optional<RequestEntity> findByRequester_idAndEvent_id(Long userId, Long eventId);
+    List<RequestEntity> findAllByRequester_id(Long userId);
+    List<RequestEntity> findByInitiator_idAndEvent_id(Long initiatorId, Long eventId);
 }

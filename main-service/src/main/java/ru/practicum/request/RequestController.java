@@ -9,6 +9,11 @@ import ru.practicum.logger.ColoredCRUDLogger;
 import ru.practicum.request.model.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.request.model.dto.EventRequestStatusUpdateResult;
 import ru.practicum.request.model.dto.ParticipationRequestDto;
+import ru.practicum.user.model.dto.UserDto;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -49,4 +54,22 @@ public class RequestController {
         return result;
     }
 
+    @GetMapping("/users/{userId}/requests")
+    public List<ParticipationRequestDto> getAllByRequester(@PathVariable Long userId) {
+        String url = String.format("MAIN /users/{%s}/requests", userId);
+        ColoredCRUDLogger.logGet(url);
+        List<ParticipationRequestDto> result = requestService.getAllByRequester(userId);
+        ColoredCRUDLogger.logGetComplete(url, "size = " + result.size());
+        return result;
+    }
+
+    @GetMapping("/users/{userId}/events/{eventId}/requests")
+    public List<ParticipationRequestDto> getAllByRequesterAndEvent(@PathVariable Long userId,
+                                                                   @PathVariable Long eventId) {
+        String url = String.format("MAIN /users/{%s}/events/{%s}/requests", userId, eventId);
+        ColoredCRUDLogger.logGet(url);
+        List<ParticipationRequestDto> result = requestService.getAllByInitiatorAndEvent(userId, eventId);
+        ColoredCRUDLogger.logGetComplete(url, "size = " + result.size());
+        return result;
+    }
 }

@@ -1,6 +1,8 @@
 package ru.practicum.event;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.practicum.event.model.dto.*;
+import ru.practicum.event.model.param.EventParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,9 +17,8 @@ public interface EventService {
 
     List<EventShortDto> getAllByInitiator(Long userId, Integer from, Integer size);
 
-    EventFullDto getByInitiator(Long userId, Long eventId);
+    EventFullDto getByIdAndInitiator(Long userId, Long eventId);
+    EventFullDto getById(Long id);
 
-    List<EventShortDto> getAll(String text, Set<Long> categories, Boolean paid,
-                                      LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable,
-                                      String sort, int from, int size);
+    List<EventShortDto> getAll(EventParam param);
 }

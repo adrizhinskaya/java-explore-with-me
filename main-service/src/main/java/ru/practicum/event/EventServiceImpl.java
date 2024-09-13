@@ -1,11 +1,14 @@
 package ru.practicum.event;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.categorie.CategoryRepository;
 import ru.practicum.categorie.model.CategoryEntity;
+import ru.practicum.categorie.model.CategoryMapper;
 import ru.practicum.event.model.*;
 import ru.practicum.event.model.dto.*;
+import ru.practicum.event.model.param.EventParam;
 import ru.practicum.location.Location;
 import ru.practicum.location.LocationEntity;
 import ru.practicum.location.LocationMapper;
@@ -14,9 +17,7 @@ import ru.practicum.pagination.PaginationHelper;
 import ru.practicum.user.UserRepository;
 import ru.practicum.user.model.UserEntity;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -116,7 +117,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getByInitiator(Long userId, Long eventId) {
+    public EventFullDto getByIdAndInitiator(Long userId, Long eventId) {
         userExistCheck(userId);
         EventEntity entity = eventRepository.findByIdAndInitiatorId(eventId, userId)
                 .orElseThrow(() -> new RuntimeException("События не существует"));
@@ -124,12 +125,18 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getAll(String text, Set<Long> categories, Boolean paid,
-                                      LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable,
-                                      String sort, int from, int size) {
-        PaginationHelper<EventEntity> paginationHelper = new PaginationHelper<>(from, size);
-        List<EventEntity> entities = paginationHelper.findAllWithPagination(eventRepository::findAll);
-        return EventMapper.mapToEventShortDto(entities);
+    public EventFullDto getById(Long id) {
+        return EventMapper.mapToEventFullDto(eventExistCheck(id));
+    }
+
+    @Override
+    public List<EventShortDto> getAll(EventParam param) {
+
+
+//        PaginationHelper<EventEntity> paginationHelper = new PaginationHelper<>(from, size);
+//        List<EventEntity> entities = paginationHelper.findAllWithPagination(eventRepository::findAll);
+//        return EventMapper.mapToEventShortDto(entities);
+        return null;
     }
 
     private EventEntity updateEntityFields(EventEntity event, UpdateEventRequest updated) {
