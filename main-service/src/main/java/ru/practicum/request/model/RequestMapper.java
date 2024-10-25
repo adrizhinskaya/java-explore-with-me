@@ -1,48 +1,53 @@
 package ru.practicum.request.model;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import ru.practicum.categorie.model.CategoryEntity;
-import ru.practicum.categorie.model.CategoryMapper;
+import lombok.RequiredArgsConstructor;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 import ru.practicum.event.model.EventEntity;
-import ru.practicum.event.model.dto.EventFullDto;
-import ru.practicum.event.model.dto.NewEventDto;
-import ru.practicum.location.LocationEntity;
-import ru.practicum.location.LocationMapper;
 import ru.practicum.request.model.dto.ParticipationRequestDto;
 import ru.practicum.user.model.UserEntity;
-import ru.practicum.user.model.UserMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RequestMapper {
-    public static RequestEntity mapToRequestEntity(ParticipationRequestDto requestDto, EventEntity event, UserEntity user) {
+
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+@RequiredArgsConstructor
+public abstract class RequestMapper {
+    public RequestEntity toRequestEntity(ParticipationRequestDto dto, EventEntity event, UserEntity requester) {
         return RequestEntity.builder()
-                .id(requestDto.getId())
-                .created(requestDto.getCreated())
+                .id(dto.getId())
+                .created(dto.getCreated())
                 .event(event)
-                .requester(user)
-                .status(requestDto.getStatus())
+                .requester(requester)
+                .status(dto.getStatus())
                 .build();
     }
 
-    public static ParticipationRequestDto mapToParticipationRequestDto(RequestEntity requestEntity) {
+    public ParticipationRequestDto toParticipationRequestDto(RequestEntity requestEntity) {
         return ParticipationRequestDto.builder()
                 .id(requestEntity.getId())
                 .created(requestEntity.getCreated())
-                .eventId(requestEntity.getEvent().getId())
-                .requesterId(requestEntity.getRequester().getId())
+                .event(requestEntity.getEvent().getId())
+                .requester(requestEntity.getRequester().getId())
                 .status(requestEntity.getStatus())
                 .build();
     }
 
-    public static List<ParticipationRequestDto> mapToParticipationRequestDto(Iterable<RequestEntity> requestEntities) {
+    public List<ParticipationRequestDto> toParticipationRequestDto(Iterable<RequestEntity> requestEntities) {
         List<ParticipationRequestDto> dtos = new ArrayList<>();
-        for (RequestEntity entity : requestEntities) {
-            dtos.add(mapToParticipationRequestDto(entity));
+        for(RequestEntity request : requestEntities) {
+            dtos.add(toParticipationRequestDto(request));
         }
         return dtos;
+    }
+
+    public RequestParam createRequestParam(Long userId, Long eventId) {
+        return RequestParam.builder()
+                .userId(userId)
+                .eventId(eventId)
+                .build();
     }
 }

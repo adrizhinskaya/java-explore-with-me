@@ -1,5 +1,7 @@
 package ru.practicum.categorie;
 
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -11,10 +13,10 @@ import ru.practicum.logger.ColoredCRUDLogger;
 
 import java.util.List;
 
+@Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
-@Validated
-@Slf4j
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -38,8 +40,8 @@ public class CategoryController {
     }
 
     @GetMapping("/categories")
-    public List<CategoryDto> getAll(@RequestParam(name = "from", defaultValue = "0") int from,
-                                    @RequestParam(name = "size", defaultValue = "10") int size) {
+    public List<CategoryDto> getAll(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                    @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         String url = String.format("MAIN /categories?{%s}&{%s}", from, size);
         ColoredCRUDLogger.logGet(url);
         List<CategoryDto> result = categoryService.getAll(from, size);
@@ -48,7 +50,7 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/{catId}")
-    public CategoryDto getById(@PathVariable(name = "catId") Long catId) {
+    public CategoryDto getById(@PathVariable Long catId) {
         String url = String.format("MAIN /categories/{%s}", catId);
         ColoredCRUDLogger.logGet(url);
         CategoryDto result = categoryService.getById(catId);

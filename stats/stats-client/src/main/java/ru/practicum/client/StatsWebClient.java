@@ -42,7 +42,7 @@ public class StatsWebClient implements StatsClient {
         }
 
         for (String u : uris) {
-            uri.append("&uri=").append(u);
+            uri.append("&uris=").append(u);
         }
 
         return webClient.get()

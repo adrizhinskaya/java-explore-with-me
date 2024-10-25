@@ -1,7 +1,6 @@
 package ru.practicum.categorie.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,8 +12,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class NewCategoryDto {
-    @NotBlank
-    @Size(min = 1, message = "{validation.annotation.size.too_short}")
-    @Size(max = 50, message = "{validation.annotation.size.too_long}")
+    @NotBlank(message = "Category name must not be blank")
+    @Size(min = 1, message = "Category name must be longer than 1 symbol")
+    @Size(max = 50, message = "Category name must be shorter than 50 symbols")
     private String name;
 }

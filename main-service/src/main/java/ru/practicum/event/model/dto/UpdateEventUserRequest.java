@@ -2,12 +2,10 @@ package ru.practicum.event.model.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import ru.practicum.event.model.UserStateAction;
 
+@Builder
 @Getter
 @ToString
 @AllArgsConstructor

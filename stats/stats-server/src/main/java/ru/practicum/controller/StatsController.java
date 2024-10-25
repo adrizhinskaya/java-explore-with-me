@@ -38,7 +38,6 @@ public class StatsController {
                                   @RequestParam(required = false, name = "uris") Set<String> uris,
                                   @RequestParam(required = false, name = "unique", defaultValue = "false")
                                   boolean unique) {
-
         uris = uris == null ? Collections.emptySet() : uris;
         LocalDateTime startTime = LocalDateTime.parse(start, formatter);
         LocalDateTime endTime = LocalDateTime.parse(end, formatter);

@@ -25,8 +25,8 @@ public class EventEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
-    @Column(name = "confirmed_requests")
-    private Long confirmedRequests;
+    //@Column(name = "confirmed_requests")
+    //private Long confirmedRequests; // не нужно в бд, оно подсчитывается
     @Column(name = "created_on")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
@@ -40,16 +40,16 @@ public class EventEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private LocationEntity location;
-    private Boolean paid;//
+    private Boolean paid;
     @Column(name = "participant_limit")
     private Integer participantLimit;
     @Column(name = "published_on")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime publishedOn;
+    private LocalDateTime publishedOn; // меняется в методе по апруву
     @Column(name = "request_moderation")
     private Boolean requestModeration;
     @Enumerated(EnumType.STRING)
-    private EventState state;
+    private EventState state; // меняется в методе по апруву
     private String title;
-    private Long views;
+    //private Long views; // не нужно в бд, оно подсчитывается
 }

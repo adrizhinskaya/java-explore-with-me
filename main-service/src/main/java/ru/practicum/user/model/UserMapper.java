@@ -1,43 +1,36 @@
 package ru.practicum.user.model;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 import ru.practicum.user.model.dto.NewUserRequest;
 import ru.practicum.user.model.dto.UserDto;
+import ru.practicum.user.model.dto.UserParam;
 import ru.practicum.user.model.dto.UserShortDto;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class UserMapper {
-    public static UserEntity mapToUserEntity(NewUserRequest newUserRequest) {
-        return UserEntity.builder()
-                .name(newUserRequest.getName())
-                .email(newUserRequest.getEmail())
+@Mapper(
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        componentModel = MappingConstants.ComponentModel.SPRING,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
+public abstract class UserMapper {
+    public abstract UserEntity toUserEntity(NewUserRequest dto);
+
+    public abstract UserDto toUserDto(UserEntity dto);
+
+    public abstract List<UserDto> toUserDto(Iterable<UserEntity> dto);
+
+    public abstract UserShortDto toUserShortDto(UserEntity dto);
+
+    public UserParam createUserParam(Set<Long> ids, Integer from, Integer size) {
+        return UserParam.builder()
+                .ids(ids)
+                .from(from)
+                .size(size)
                 .build();
-    }
-
-    public static UserDto mapToUserDto(UserEntity userEntity) {
-        return UserDto.builder()
-                .id(userEntity.getId())
-                .name(userEntity.getName())
-                .email(userEntity.getEmail())
-                .build();
-    }
-
-    public static UserShortDto mapToUserShortDto(UserEntity userEntity) {
-        return UserShortDto.builder()
-                .id(userEntity.getId())
-                .name(userEntity.getName())
-                .build();
-    }
-
-    public static List<UserDto> mapToUserDto(Iterable<UserEntity> userEntities) {
-        List<UserDto> dtos = new ArrayList<>();
-        for (UserEntity entity : userEntities) {
-            dtos.add(mapToUserDto(entity));
-        }
-        return dtos;
     }
 }

@@ -4,10 +4,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import ru.practicum.event.model.AdminStateAction;
 import ru.practicum.location.Location;
 
@@ -15,6 +12,7 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @ToString
 public class UpdateEventAdminRequest extends UpdateEventRequest {
@@ -23,7 +21,7 @@ public class UpdateEventAdminRequest extends UpdateEventRequest {
 
     @Override
     @AssertTrue(message = "EventDate cannot be earlier than 1 hours from now")
-    protected boolean isEventDateCorrect() {
+    protected Boolean isEventDateCorrect() {
         if(eventDate != null) {
             return eventDate.isAfter(LocalDateTime.now().plusHours(1));
         }

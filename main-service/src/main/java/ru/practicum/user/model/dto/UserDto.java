@@ -6,7 +6,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(of = {"id"})
 public class UserDto {
     private Long id;
     private String name;

@@ -28,7 +28,6 @@ create TABLE IF NOT EXISTS events (
   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   annotation VARCHAR(2000) NOT NULL,
   category_id BIGINT NOT NULL,
-  confirmed_requests BIGINT,
   created_on TIMESTAMP WITHOUT TIME ZONE,
   description VARCHAR(7000) NOT NULL,
   event_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
@@ -40,7 +39,6 @@ create TABLE IF NOT EXISTS events (
   request_moderation BOOL,
   state VARCHAR(10),
   title VARCHAR(120) NOT NULL,
-  views BIGINT,
   CONSTRAINT fk_events_to_categories FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE CASCADE,
   CONSTRAINT fk_events_to_users FOREIGN KEY(initiator_id) REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT fk_events_to_locations FOREIGN KEY(location_id) REFERENCES locations(id)
@@ -51,7 +49,7 @@ create TABLE IF NOT EXISTS requests (
   created TIMESTAMP WITHOUT TIME ZONE,
   event_id BIGINT NOT NULL,
   requester_id BIGINT NOT NULL,
-  state VARCHAR(10),
+  status VARCHAR(10),
   CONSTRAINT fk_requests_to_events FOREIGN KEY(event_id) REFERENCES events(id) ON DELETE CASCADE,
   CONSTRAINT fk_requests_to_users FOREIGN KEY(requester_id) REFERENCES users(id) ON DELETE CASCADE
 );

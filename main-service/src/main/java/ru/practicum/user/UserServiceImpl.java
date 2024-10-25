@@ -7,6 +7,7 @@ import ru.practicum.user.model.UserEntity;
 import ru.practicum.user.model.UserMapper;
 import ru.practicum.user.model.dto.NewUserRequest;
 import ru.practicum.user.model.dto.UserDto;
+import ru.practicum.user.model.dto.UserParam;
 
 import java.util.List;
 import java.util.Set;
@@ -15,23 +16,24 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserMapper mapper;
 
     @Override
     public UserDto create(NewUserRequest newUserRequest) {
-        UserEntity entity = userRepository.save(UserMapper.mapToUserEntity(newUserRequest));
-        return UserMapper.mapToUserDto(entity);
+        UserEntity entity = userRepository.save(mapper.toUserEntity(newUserRequest));
+        return mapper.toUserDto(entity);
     }
 
     @Override
-    public List<UserDto> getAll(Set<Long> ids, int from, int size) {
-        PaginationHelper<UserEntity> paginationHelper = new PaginationHelper<>(from, size);
+    public List<UserDto> getAll(UserParam params) {
+        PaginationHelper<UserEntity> paginationHelper = new PaginationHelper<>(params.getFrom(), params.getSize());
         List<UserEntity> entities;
-        if (ids.isEmpty()) {
+        if (params.getIds().isEmpty()) {
             entities = paginationHelper.findAllWithPagination(userRepository::findAll);
         } else {
-            entities = paginationHelper.findAllWithPagination(userRepository::findAllByIdIn, ids);
+            entities = paginationHelper.findAllWithPagination(userRepository::findAllByIdIn, params.getIds());
         }
-        return UserMapper.mapToUserDto(entities);
+        return mapper.toUserDto(entities);
     }
 
     @Override

@@ -1,4 +1,5 @@
 package ru.practicum.event.model.dto;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -8,35 +9,42 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Getter
 @ToString
 public class NewEventDto {
-    @NotBlank
-    @Size(min = 20, message = "{validation.annotation.size.too_short}")
-    @Size(max = 2000, message = "{validation.annotation.size.too_long}")
+    @NotBlank(message = "Event annotation must not be blank")
+    @Size(min = 20, message = "Event annotation name must be longer than 20 symbols")
+    @Size(max = 2000, message = "Event annotation must be shorter than 2000 symbols")
     private String annotation;
-    @NotNull
+
+    @NotNull(message = "Event category must not be null")
     private Long category;
-    @NotBlank
-    @Size(min = 20, message = "{validation.annotation.size.too_short}")
-    @Size(max = 7000, message = "{validation.annotation.size.too_long}")
+
+    @NotBlank(message = "Event description must not be blank")
+    @Size(min = 20, message = "Event description must be longer than 20 symbols")
+    @Size(max = 7000, message = "Event description must be shorter than 7000 symbols")
     private String description;
-    @NotNull
+
+    @NotNull(message = "Event eventDate must not be null")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime eventDate;
-    @NotNull
+
+    @NotNull(message = "Event location must not be null")
     private Location location;
     private Boolean paid;
-    @Positive
+
+    @Positive(message = "Event participantLimit must be positive")
     private Integer participantLimit;
     private Boolean requestModeration;
-    @NotBlank
-    @Size(min = 3, message = "{validation.annotation.size.too_short}")
-    @Size(max = 120, message = "{validation.annotation.size.too_long}")
+
+    @NotBlank(message = "Event title must not be blank")
+    @Size(min = 3, message = "Event title must be longer than 3 symbols")
+    @Size(max = 120, message = "Event title must be shorter than 120 symbols")
     private String title;
 
     @AssertTrue(message = "EventDate cannot be earlier than 2 hours from now")
-    private boolean isEventDateAfter2HoursFromNow() {
+    private Boolean isEventDateAfter2HoursFromNow() {
         return eventDate.isAfter(LocalDateTime.now().plusHours(2));
     }
 }

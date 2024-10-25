@@ -1,21 +1,18 @@
 package ru.practicum.location;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class LocationMapper {
-    public static LocationEntity mapToLocationEntity(Location location) {
-        return LocationEntity.builder()
-                .lat(location.getLat())
-                .lon(location.getLon())
-                .build();
-    }
+@Mapper(
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        componentModel = MappingConstants.ComponentModel.SPRING,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
+public abstract class LocationMapper {
+    public abstract LocationEntity toLocationEntity(Location location);
 
-    public static Location mapToLocation(LocationEntity locationEntity) {
-        return Location.builder()
-                .lat(locationEntity.getLat())
-                .lon(locationEntity.getLon())
-                .build();
-    }
+    public abstract Location toLocation(LocationEntity locationEntity);
 }
+

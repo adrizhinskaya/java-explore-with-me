@@ -1,33 +1,22 @@
 package ru.practicum.categorie.model;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.mapstruct.*;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.categorie.model.dto.NewCategoryDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CategoryMapper {
-    public static CategoryEntity mapToCategoryEntity(NewCategoryDto newCategoryDto) {
-        return CategoryEntity.builder()
-                .name(newCategoryDto.getName())
-                .build();
-    }
+@Mapper(
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        componentModel = MappingConstants.ComponentModel.SPRING,
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
+public abstract class CategoryMapper {
+    public abstract CategoryEntity toCategoryEntity(NewCategoryDto newCategoryDto);
 
-    public static CategoryDto mapToCategoryDto(CategoryEntity categoryEntity) {
-        return CategoryDto.builder()
-                .id(categoryEntity.getId())
-                .name(categoryEntity.getName())
-                .build();
-    }
+    public abstract CategoryDto toCategoryDto(CategoryEntity categoryEntity);
 
-    public static List<CategoryDto> mapToCategoryDto(Iterable<CategoryEntity> categoryEntities) {
-        List<CategoryDto> dtos = new ArrayList<>();
-        for (CategoryEntity entity : categoryEntities) {
-            dtos.add(mapToCategoryDto(entity));
-        }
-        return dtos;
-    }
+    public abstract List<CategoryDto> toCategoryDto(Iterable<CategoryEntity> categoryEntities);
+
+    public abstract void update(NewCategoryDto dto, @MappingTarget CategoryEntity model);
 }
