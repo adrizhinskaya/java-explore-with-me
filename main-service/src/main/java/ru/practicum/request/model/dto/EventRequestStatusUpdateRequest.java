@@ -3,7 +3,7 @@ package ru.practicum.request.model.dto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
-import ru.practicum.request.model.RequestStatus;
+import ru.practicum.request.model.RequestStatusUpdate;
 
 import java.util.Set;
 @AllArgsConstructor
@@ -15,5 +15,5 @@ import java.util.Set;
 public class EventRequestStatusUpdateRequest {
     private Set<Long> requestIds;
     @Enumerated(EnumType.STRING)
-    private RequestStatus status;
+    private RequestStatusUpdate status;
 }

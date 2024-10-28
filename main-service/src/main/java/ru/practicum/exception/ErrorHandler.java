@@ -51,6 +51,23 @@ public class ErrorHandler {
                 .build();
     }
 
+    @ExceptionHandler(ValidationBadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleValidationBadRequestException(final ValidationBadRequestException e) {
+        log.error("400 {}", e.getMessage(), e);
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        String stackTrace = sw.toString();
+        return ApiError.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(ERROR_COLOR + e.getMessage() + RESET)
+                .reason("Validation for object is failed.")
+                .errors(stackTrace)
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
     @ExceptionHandler(ConstraintConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError handleValidationExceptions(final ConstraintConflictException e) {

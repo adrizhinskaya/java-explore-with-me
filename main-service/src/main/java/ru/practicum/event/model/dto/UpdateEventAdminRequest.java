@@ -3,10 +3,9 @@ package ru.practicum.event.model.dto;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import ru.practicum.event.model.AdminStateAction;
-import ru.practicum.location.Location;
+import ru.practicum.exception.ValidationBadRequestException;
 
 import java.time.LocalDateTime;
 
@@ -20,11 +19,10 @@ public class UpdateEventAdminRequest extends UpdateEventRequest {
     private AdminStateAction stateAction;
 
     @Override
-    @AssertTrue(message = "EventDate cannot be earlier than 1 hours from now")
-    protected Boolean isEventDateCorrect() {
-        if(eventDate != null) {
-            return eventDate.isAfter(LocalDateTime.now().plusHours(1));
+    public void setEventDate(LocalDateTime eventDate) {
+        if (eventDate != null && eventDate.isBefore(LocalDateTime.now().plusHours(1))) {
+            throw new ValidationBadRequestException("EventDate must be at least 1 hour from now");
         }
-        return true;
+        this.eventDate = eventDate;
     }
 }

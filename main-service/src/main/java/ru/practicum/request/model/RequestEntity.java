@@ -29,5 +29,5 @@ public class RequestEntity {
     @JoinColumn(name = "requester_id")
     private UserEntity requester;
     @Enumerated(EnumType.STRING)
-    private EventState status;
+    private RequestStatus status;
 }

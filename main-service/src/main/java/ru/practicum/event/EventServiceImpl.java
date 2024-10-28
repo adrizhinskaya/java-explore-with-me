@@ -19,12 +19,15 @@ import ru.practicum.event.model.param.AdminEventParam;
 import ru.practicum.event.model.param.EventParam;
 import ru.practicum.event.model.param.EventUpdateParam;
 import ru.practicum.event.model.param.PaginationEventParam;
+import ru.practicum.exception.ConstraintConflictException;
+import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.location.Location;
 import ru.practicum.location.LocationEntity;
 import ru.practicum.location.LocationMapper;
 import ru.practicum.location.LocationRepository;
 import ru.practicum.pagination.PaginationHelper;
 import ru.practicum.request.RequestRepository;
+import ru.practicum.request.model.RequestStatus;
 import ru.practicum.user.UserRepository;
 import ru.practicum.user.model.UserEntity;
 import ru.practicum.user.model.UserMapper;
@@ -57,12 +60,12 @@ public class EventServiceImpl implements EventService {
 
     private UserEntity userExistCheck(Long userId) {
         return userRepository.findById(userId).orElseThrow(() ->
-                new RuntimeException("Пользователь не найден"));
+                new EntityNotFoundException("Пользователь не найден"));
     }
 
     private CategoryEntity categoryExistCheck(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(() ->
-                new RuntimeException("Категория не найдена"));
+                new EntityNotFoundException("Категория не найдена"));
     }
 
     private LocationEntity getOrCreateLocation(Location location) {
@@ -72,7 +75,7 @@ public class EventServiceImpl implements EventService {
 
     private EventEntity eventExistCheck(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(() ->
-                new RuntimeException("Событие не найдено"));
+                new EntityNotFoundException("Событие не найдено"));
     }
 
     private Map<Long, Long> getEventsViewsMap(@Nullable LocalDateTime start, @Nullable LocalDateTime end, List<EventEntity> events, Boolean unique) {
@@ -95,7 +98,7 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> hitsMap = getEventsViewsMap(start, end, events, unique);
         return events.stream()
                 .map(event -> {
-                    Long confirmedRequests = requestRepository.countAllByEventIdAndStatusIs(event.getId(), EventState.PUBLISHED);
+                    Long confirmedRequests = requestRepository.countAllByEventIdAndStatusIs(event.getId(), RequestStatus.CONFIRMED);
                     Long views = hitsMap.get(event.getId()); // Получаем количество просмотров для текущего события
                     CategoryDto categoryDto = categoryMapper.toCategoryDto(event.getCategory());
                     UserShortDto userShortDto = userMapper.toUserShortDto(event.getInitiator());
@@ -108,7 +111,7 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> hitsMap = getEventsViewsMap(start, end, events, unique);
         return events.stream()
                 .map(event -> {
-                    Long confirmedRequests = requestRepository.countAllByEventIdAndStatusIs(event.getId(), EventState.PUBLISHED);
+                    Long confirmedRequests = requestRepository.countAllByEventIdAndStatusIs(event.getId(), RequestStatus.CONFIRMED);
                     Long views = hitsMap.get(event.getId()); // Получаем количество просмотров для текущего события
                     CategoryDto categoryDto = categoryMapper.toCategoryDto(event.getCategory());
                     UserShortDto userShortDto = userMapper.toUserShortDto(event.getInitiator());
@@ -129,7 +132,7 @@ public class EventServiceImpl implements EventService {
         UserEntity user = userExistCheck(userId);
         CategoryEntity category = categoryExistCheck(newEventDto.getCategory());
         LocationEntity locationEntity = getOrCreateLocation(newEventDto.getLocation());
-        EventEntity entity = eventRepository.save(eventMapper.toEventEntity(newEventDto, category, user, locationEntity));
+        EventEntity entity = eventRepository.save(eventMapper.toEventEntity(newEventDto, category, user, locationEntity, EventState.PENDING));
         CategoryDto categoryDto = categoryMapper.toCategoryDto(entity.getCategory());
         UserShortDto userShortDto = userMapper.toUserShortDto(entity.getInitiator());
         Location location = locationMapper.toLocation(entity.getLocation());
@@ -141,7 +144,7 @@ public class EventServiceImpl implements EventService {
         UserEntity user = userExistCheck(params.getUserId());
         EventEntity event = eventExistCheck(params.getEventId());
         if (event.getState().equals(EventState.PUBLISHED)) {
-            throw new RuntimeException("Опубликованное событие не может быть изменено");
+            throw new ConstraintConflictException("Опубликованное событие не может быть изменено");
         }
         UserStateAction state = updateEvent.getStateAction();
         if (state != null) {
@@ -150,14 +153,14 @@ public class EventServiceImpl implements EventService {
                     if (event.getState().equals(EventState.PENDING)) {
                         event.setState(EventState.CANCELED);
                     } else {
-                        throw new RuntimeException("Некорректный stateAction");
+                        throw new ConstraintConflictException("Некорректный stateAction");
                     }
                     break;
                 case SEND_TO_REVIEW:
                     if (event.getState().equals(EventState.CANCELED)) {
                         event.setState(EventState.PENDING);
                     } else {
-                        throw new RuntimeException("Некорректный stateAction");
+                        throw new ConstraintConflictException("Некорректный stateAction");
                     }
                     break;
             }
@@ -175,8 +178,8 @@ public class EventServiceImpl implements EventService {
         EventEntity event = eventExistCheck(eventId);
         AdminStateAction state = updateEvent.getStateAction();
         if (state != null) {
-            if (event.getState() != null && !event.getState().equals(EventState.PENDING)) {
-                throw new RuntimeException("Некорректный stateAction");
+            if (!event.getState().equals(EventState.PENDING)) {
+                throw new ConstraintConflictException("Invalid stateAction .");
             }
             switch (state) {
                 case REJECT_EVENT:
@@ -207,7 +210,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto getByIdAndInitiator(Long userId, Long eventId) {
         userExistCheck(userId);
         EventEntity entity = eventRepository.findByIdAndInitiatorId(eventId, userId)
-                .orElseThrow(() -> new RuntimeException("События не существует"));
+                .orElseThrow(() -> new EntityNotFoundException("События не существует"));
 
         CategoryDto categoryDto = categoryMapper.toCategoryDto(entity.getCategory());
         UserShortDto userShortDto = userMapper.toUserShortDto(entity.getInitiator());
@@ -219,7 +222,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getById(Long id) {
         EventEntity entity = eventExistCheck(id);
-        return createEventFullDto(null, null, List.of(entity), false).getFirst();
+        if(entity.getState() != EventState.PUBLISHED) {
+            throw new EntityNotFoundException("Event should be PUBLISHED");
+        }
+        return createEventFullDto(null, null, List.of(entity), true).getFirst();
     }
 
     @Override
@@ -270,26 +276,24 @@ public class EventServiceImpl implements EventService {
         return event;
     }
 
-    private BooleanExpression makeTimeCondition(LocalDateTime rangeStart, LocalDateTime rangeEnd) {
+    private void addTimeCondition(LocalDateTime rangeStart, LocalDateTime rangeEnd, List<BooleanExpression> conditions) {
         QEventEntity event = QEventEntity.eventEntity;
         if (rangeStart != null && rangeEnd != null) {
-            return event.eventDate.between(rangeStart, rangeEnd);
+            conditions.add(event.eventDate.between(rangeStart, rangeEnd));
         }
         if (rangeStart != null) {
-            return event.eventDate.after(rangeStart);
+            conditions.add(event.eventDate.after(rangeStart));
         }
         if (rangeEnd != null) {
-            return event.eventDate.before(rangeEnd);
-        } else {
-            return event.eventDate.after(LocalDateTime.now());
+            conditions.add(event.eventDate.before(rangeEnd));
         }
     }
 
     private BooleanExpression makeCondition(AdminEventParam param) {
         QEventEntity event = QEventEntity.eventEntity;
         List<BooleanExpression> conditions = new ArrayList<>();
-        conditions.add(event.state.eq(EventState.PUBLISHED));
-        conditions.add(makeTimeCondition(param.getRangeStart(), param.getRangeEnd()));
+        //conditions.add(event.state.eq(EventState.PUBLISHED));
+        addTimeCondition(param.getRangeStart(), param.getRangeEnd(), conditions);
 
         if (param.getUsers() != null) {
             conditions.add(QEventEntity.eventEntity.initiator.id.in(param.getUsers()));
@@ -299,6 +303,10 @@ public class EventServiceImpl implements EventService {
         }
         if (param.getCategories() != null) {
             conditions.add(QEventEntity.eventEntity.category.id.in(param.getCategories()));
+        }
+
+        if (conditions.isEmpty()) {
+            conditions.add(QEventEntity.eventEntity.isNotNull());
         }
 
         return conditions.stream()
@@ -314,7 +322,8 @@ public class EventServiceImpl implements EventService {
         addTextCondition(param, conditions);
         addCategoriesCondition(param, conditions);
         addPaidCondition(param, conditions);
-        conditions.add(makeTimeCondition(param.getRangeStart(), param.getRangeEnd()));
+        addTimeCondition(param.getRangeStart(), param.getRangeEnd(), conditions);
+//        conditions.add(makeTimeCondition(param.getRangeStart(), param.getRangeEnd()));
 //        addOnlyAvailableCondition(param, conditions);
 
         return conditions.stream()
@@ -361,7 +370,7 @@ public class EventServiceImpl implements EventService {
         return switch (param.getSort()) {
             case "EVENT_DATE" -> Sort.by("eventDate").descending();
             case "VIEWS" -> Sort.by("views").descending();
-            default -> null;
+            default -> Sort.by("publishedOn").ascending();
         };
     }
 }

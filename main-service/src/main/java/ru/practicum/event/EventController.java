@@ -103,15 +103,15 @@ public class EventController {
                                       @RequestParam(required = false, name = "rangeStart") String rangeStart,
                                       @RequestParam(required = false, name = "rangeEnd") String rangeEnd,
                                       @RequestParam(required = false, name = "onlyAvailable", defaultValue = "false") Boolean onlyAvailable,
-                                      @RequestParam(required = false, name = "sort") String sort,
+                                      @RequestParam(required = false, name = "sort", defaultValue = "PUBLISHED_ON") String sort,
                                       @PositiveOrZero @RequestParam(required = false, name = "from", defaultValue = "0") Integer from,
                                       @Positive @RequestParam(required = false, name = "size", defaultValue = "10") Integer size,
                                       HttpServletRequest request) {
         String url = String.format("MAIN /events?{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}",
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         ColoredCRUDLogger.logGet(url);
-        LocalDateTime start = LocalDateTime.parse(rangeStart, formatter);
-        LocalDateTime end = LocalDateTime.parse(rangeEnd, formatter);
+        LocalDateTime start = rangeStart == null ? null : LocalDateTime.parse(rangeStart, formatter);
+        LocalDateTime end = rangeEnd == null ? null :  LocalDateTime.parse(rangeEnd, formatter);
         statsClient.postStats("ewm-main-service", request.getRequestURI(), request.getRemoteAddr(),
                 LocalDateTime.now());
         EventParam param = eventMapper.createEventParam(text, categories, paid, start, end, onlyAvailable, sort, from, size);
@@ -131,8 +131,8 @@ public class EventController {
         String url = String.format("MAIN /admin/events?{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
         ColoredCRUDLogger.logGet(url);
-        LocalDateTime start = LocalDateTime.parse(rangeStart, formatter);
-        LocalDateTime end = LocalDateTime.parse(rangeEnd, formatter);
+        LocalDateTime start = rangeStart == null ? null : LocalDateTime.parse(rangeStart, formatter);
+        LocalDateTime end = rangeEnd == null ? null :  LocalDateTime.parse(rangeEnd, formatter);
         AdminEventParam param = eventMapper.createAdminEventParam(users, states, categories, start, end, from, size);
         List<EventFullDto> result = eventService.getAllFromAdmin(param);
         ColoredCRUDLogger.logGetComplete(url, "size = " + result.size());

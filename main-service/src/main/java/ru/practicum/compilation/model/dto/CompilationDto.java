@@ -2,13 +2,13 @@ package ru.practicum.compilation.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import ru.practicum.event.model.dto.EventShortDto;
 
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
 @ToString

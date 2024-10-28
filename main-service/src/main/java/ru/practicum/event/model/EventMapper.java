@@ -1,11 +1,10 @@
 package ru.practicum.event.model;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.practicum.categorie.model.CategoryEntity;
-import ru.practicum.categorie.model.CategoryMapper;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.event.model.dto.EventFullDto;
 import ru.practicum.event.model.dto.EventShortDto;
@@ -14,11 +13,10 @@ import ru.practicum.event.model.param.AdminEventParam;
 import ru.practicum.event.model.param.EventParam;
 import ru.practicum.event.model.param.EventUpdateParam;
 import ru.practicum.event.model.param.PaginationEventParam;
+import ru.practicum.exception.ValidationBadRequestException;
 import ru.practicum.location.Location;
 import ru.practicum.location.LocationEntity;
-import ru.practicum.location.LocationMapper;
 import ru.practicum.user.model.UserEntity;
-import ru.practicum.user.model.UserMapper;
 import ru.practicum.user.model.dto.UserShortDto;
 
 import java.time.LocalDateTime;
@@ -28,7 +26,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class EventMapper {
     public EventEntity toEventEntity(NewEventDto newEventDto, CategoryEntity category, UserEntity user,
-                                     LocationEntity location) {
+                                     LocationEntity location, EventState state) {
         return EventEntity.builder()
                 .annotation(newEventDto.getAnnotation())
                 .category(category)
@@ -36,9 +34,10 @@ public class EventMapper {
                 .eventDate(newEventDto.getEventDate())
                 .initiator(user)
                 .location(location)
-                .paid(newEventDto.getPaid())
-                .participantLimit(newEventDto.getParticipantLimit())
-                .requestModeration(newEventDto.getRequestModeration())
+                .paid(newEventDto.getPaid() == null ? false : newEventDto.getPaid())
+                .participantLimit(newEventDto.getParticipantLimit() == null ? 0 : newEventDto.getParticipantLimit())
+                .requestModeration(newEventDto.getRequestModeration() == null ? true : newEventDto.getRequestModeration())
+                .state(state)
                 .title(newEventDto.getTitle())
                 .build();
     }
@@ -103,6 +102,7 @@ public class EventMapper {
                                        String sort,
                                        Integer from,
                                        Integer size) {
+        validateEventParam(categories, rangeStart, rangeEnd);
         return EventParam.builder()
                 .text(text)
                 .categories(categories)
@@ -114,6 +114,17 @@ public class EventMapper {
                 .from(from)
                 .size(size)
                 .build();
+    }
+
+    private void validateEventParam(Set<Long> categories,
+                                          LocalDateTime rangeStart,
+                                          LocalDateTime rangeEnd) {
+        if (categories != null && !categories.stream().allMatch(id -> id > 0)) {
+            throw new ValidationBadRequestException("Some id in categories are not valid.");
+        }
+        if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
+            throw new ValidationBadRequestException("rangeStart should be before rangeEnd.");
+        }
     }
 
     public AdminEventParam createAdminEventParam(Set<Long> users,

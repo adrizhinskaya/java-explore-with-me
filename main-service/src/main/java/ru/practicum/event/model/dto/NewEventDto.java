@@ -28,13 +28,14 @@ public class NewEventDto {
 
     @NotNull(message = "Event eventDate must not be null")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Future
     private LocalDateTime eventDate;
 
     @NotNull(message = "Event location must not be null")
     private Location location;
     private Boolean paid;
 
-    @Positive(message = "Event participantLimit must be positive")
+    @PositiveOrZero(message = "Event participantLimit must be positive or zero")
     private Integer participantLimit;
     private Boolean requestModeration;
 

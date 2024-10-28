@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.event.EventRepository;
 import ru.practicum.event.model.EventEntity;
+
 import ru.practicum.event.model.EventState;
 import ru.practicum.exception.ConstraintConflictException;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.request.model.RequestEntity;
 import ru.practicum.request.model.RequestMapper;
 import ru.practicum.request.model.RequestParam;
+import ru.practicum.request.model.RequestStatus;
 import ru.practicum.request.model.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.request.model.dto.EventRequestStatusUpdateResult;
 import ru.practicum.request.model.dto.ParticipationRequestDto;
@@ -35,25 +37,24 @@ public class RequestServiceImpl implements RequestService {
         Map<String, Object> obj = createChecks(userId, eventId);
         UserEntity user = (UserEntity) obj.get("user");
         EventEntity event = (EventEntity) obj.get("event");
-        EventState state = event.getRequestModeration() ? EventState.PENDING : EventState.PUBLISHED;
+        RequestStatus status = !event.getRequestModeration() || event.getParticipantLimit() == 0 ?
+                RequestStatus.CONFIRMED : RequestStatus.PENDING;
         RequestEntity request = RequestEntity.builder()
                 .created(LocalDateTime.now())
                 .event(event)
                 .requester(user)
-                .status(state)
+                .status(status)
                 .build();
-        RequestEntity re = requestRepository.save(request);
-        ParticipationRequestDto pr = mapper.toParticipationRequestDto(re);
-        return pr;
+        return mapper.toParticipationRequestDto(requestRepository.save(request));
     }
 
     @Override
     public ParticipationRequestDto cancel(Long userId, Long requestId) {
         RequestEntity request = cancelChecks(userId, requestId);
-        if (request.getStatus() == EventState.CANCELED) {
+        if (request.getStatus() == RequestStatus.REJECTED) {
             return mapper.toParticipationRequestDto(request);
         }
-        request.setStatus(EventState.CANCELED);
+        request.setStatus(RequestStatus.CANCELED);
         RequestEntity entity = requestRepository.save(request);
         return mapper.toParticipationRequestDto(entity);
     }
@@ -113,14 +114,14 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private void requestsLimitReachedCheck(EventEntity event) {
-        Long confirmedRequestsSum = requestRepository.countAllByEventIdAndStatusIs(event.getId(), EventState.PUBLISHED);
+        Long confirmedRequestsSum = requestRepository.countAllByEventIdAndStatusIs(event.getId(), RequestStatus.CONFIRMED);
         if ((event.getParticipantLimit() != 0 && confirmedRequestsSum == (long) event.getParticipantLimit())) {
-            throw new RuntimeException("Limit of participation requests reached");
+            throw new ConstraintConflictException("Limit of participation requests reached");
         }
     }
 
     private boolean isRequestsLimitReachedCheck(EventEntity event) {
-        Long confirmedRequestsSum = requestRepository.countAllByEventIdAndStatusIs(event.getId(), EventState.PUBLISHED);
+        Long confirmedRequestsSum = requestRepository.countAllByEventIdAndStatusIs(event.getId(), RequestStatus.CONFIRMED);
         return (event.getParticipantLimit() != 0 && confirmedRequestsSum == (long) event.getParticipantLimit());
     }
 
@@ -174,7 +175,7 @@ public class RequestServiceImpl implements RequestService {
 
     private void rejectAllRequests(List<RequestEntity> requestEntities, EventRequestStatusUpdateResult result) {
         for (RequestEntity r : requestEntities) {
-            changeRequestStatus(r, EventState.CANCELED);
+            changeRequestStatus(r, RequestStatus.REJECTED);
         }
         result.setRejectedRequests((mapper.toParticipationRequestDto(requestEntities)));
     }
@@ -189,15 +190,15 @@ public class RequestServiceImpl implements RequestService {
                 rejectAllRequests(requestEntities, result);
                 return;
             } else {
-                changeRequestStatus(r, EventState.PUBLISHED);
+                changeRequestStatus(r, RequestStatus.CONFIRMED);
                 confirmed.add(r);
             }
         }
         result.setConfirmedRequests((mapper.toParticipationRequestDto(confirmed)));
     }
 
-    private void changeRequestStatus(RequestEntity entity, EventState status) {
-        if (entity.getStatus() != EventState.PENDING) {
+    private void changeRequestStatus(RequestEntity entity, RequestStatus status) {
+        if (entity.getStatus() != RequestStatus.PENDING) {
             throw new ConstraintConflictException(
                     "The status can only be changed for requests that are in a pending state");
         }

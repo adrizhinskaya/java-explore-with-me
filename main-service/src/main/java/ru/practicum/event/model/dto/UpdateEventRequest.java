@@ -1,13 +1,13 @@
 package ru.practicum.event.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import ru.practicum.exception.ValidationBadRequestException;
 import ru.practicum.location.Location;
 
 import java.time.LocalDateTime;
@@ -28,6 +28,7 @@ public abstract class UpdateEventRequest {
     protected String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@Future
     protected LocalDateTime eventDate;
 
     protected Location location;
@@ -43,11 +44,10 @@ public abstract class UpdateEventRequest {
     @Size(max = 120, message = "Event title must be shorter than 120 symbols")
     protected String title;
 
-    @AssertTrue(message = "EventDate cannot be earlier than 2 hours from now")
-    protected Boolean isEventDateCorrect() {
-        if(eventDate != null) {
-            return eventDate.isAfter(LocalDateTime.now().plusHours(2));
+    public void setEventDate(LocalDateTime eventDate) {
+        if (eventDate != null && eventDate.isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new ValidationBadRequestException("EventDate must be at least 2 hours from now");
         }
-        return true;
+        this.eventDate = eventDate;
     }
 }

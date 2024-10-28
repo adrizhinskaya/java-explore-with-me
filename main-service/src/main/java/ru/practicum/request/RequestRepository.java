@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.event.model.EventState;
 import ru.practicum.request.model.RequestEntity;
+import ru.practicum.request.model.RequestStatus;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,5 +20,5 @@ public interface RequestRepository extends JpaRepository<RequestEntity, Long> {
             "WHERE r.event.id = :eventId AND r.event.initiator.id = :initiatorId")
     List<RequestEntity> findByInitiatorIdAndEventId(@Param("initiatorId") Long initiatorId,
                                                     @Param("eventId") Long eventId);
-    Long countAllByEventIdAndStatusIs(Long eventId, EventState status);
+    Long countAllByEventIdAndStatusIs(Long eventId, RequestStatus status);
 }

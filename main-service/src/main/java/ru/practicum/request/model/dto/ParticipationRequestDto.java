@@ -3,6 +3,7 @@ package ru.practicum.request.model.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.event.model.EventState;
+import ru.practicum.request.model.RequestStatus;
 
 import java.time.LocalDateTime;
 
@@ -18,5 +19,5 @@ public class ParticipationRequestDto {
     private LocalDateTime created;
     private Long event;
     private Long requester;
-    private EventState status;
+    private RequestStatus status;
 }
