@@ -6,6 +6,7 @@ import ru.practicum.dto.EndpointHit;
 import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.dto.EndpointHitMapper;
 import ru.practicum.dto.ViewStats;
+import ru.practicum.exception.ValidationBadRequestException;
 import ru.practicum.repository.StatsRepository;
 
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<ViewStats> getAll(LocalDateTime start, LocalDateTime end, Set<String> uris, boolean unique) {
+        checkTime(start, end);
         if (unique) {
             if (uris.isEmpty()) {
                 return statsRepository.getStatsWithUniqueIp(start, end);
@@ -34,5 +36,11 @@ public class StatsServiceImpl implements StatsService {
             return statsRepository.getStats(start, end);
         }
         return statsRepository.getStatsByUris(start, end, uris);
+    }
+
+    private void checkTime(LocalDateTime start, LocalDateTime end) {
+        if (start.isAfter(end)) {
+            throw new ValidationBadRequestException("Start cannot be after end .");
+        }
     }
 }
