@@ -1,7 +1,9 @@
 package ru.practicum.client;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -18,8 +20,9 @@ import java.util.List;
 public class StatsWebClient implements StatsClient {
     private final WebClient webClient;
 
-    public StatsWebClient() {
-        this.webClient = WebClient.create("http://localhost:9090");
+    @Autowired
+    public StatsWebClient(@Value("${stats-server.url}") String url) {
+        this.webClient = WebClient.create(url);
     }
 
     @Override
