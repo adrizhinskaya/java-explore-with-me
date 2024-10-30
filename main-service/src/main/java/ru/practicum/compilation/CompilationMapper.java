@@ -1,24 +1,20 @@
-package ru.practicum.compilation.model;
+package ru.practicum.compilation;
 
-import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import ru.practicum.compilation.model.CompilationEntity;
+import ru.practicum.compilation.model.EventCompilationEntity;
+import ru.practicum.compilation.model.EventCompilationId;
 import ru.practicum.compilation.model.dto.CompilationDto;
 import ru.practicum.compilation.model.dto.NewCompilationDto;
 import ru.practicum.compilation.model.dto.UpdateCompilationRequest;
 import ru.practicum.event.model.EventEntity;
-import ru.practicum.event.model.EventMapper;
 import ru.practicum.event.model.dto.EventShortDto;
 
 import java.util.List;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public class CompilationMapper {
-    private final EventMapper eventMapper;
-
-    public CompilationMapper() {
-        eventMapper = new EventMapper();
-    }
 
     public CompilationEntity toCompilationEntity(NewCompilationDto newEventDto) {
         return CompilationEntity.builder()
@@ -28,7 +24,7 @@ public class CompilationMapper {
     }
 
     public EventCompilationEntity createEventCompilationEntity(CompilationEntity compilation, EventEntity event) {
-        EventsCompilationsId id = new EventsCompilationsId(compilation.getId(), event.getId());
+        EventCompilationId id = new EventCompilationId(compilation.getId(), event.getId());
         return EventCompilationEntity.builder()
                 .id(id)
                 .compilation(compilation)
@@ -46,10 +42,10 @@ public class CompilationMapper {
     }
 
     public void updateEntity(CompilationEntity entity, UpdateCompilationRequest newComp) {
-        if(newComp.getTitle() != null) {
+        if (newComp.getTitle() != null) {
             entity.setTitle(newComp.getTitle());
         }
-        if(newComp.getPinned() != null) {
+        if (newComp.getPinned() != null) {
             entity.setPinned(newComp.getPinned());
         }
     }

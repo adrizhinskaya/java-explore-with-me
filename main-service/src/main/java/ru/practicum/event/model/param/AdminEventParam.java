@@ -2,9 +2,7 @@ package ru.practicum.event.model.param;
 
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.w3c.dom.events.Event;
-import ru.practicum.event.model.EventState;
+import ru.practicum.event.model.enums.EventState;
 
 import java.time.LocalDateTime;
 import java.util.Set;

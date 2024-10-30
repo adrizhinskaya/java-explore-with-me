@@ -3,7 +3,7 @@ package ru.practicum.event.model.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import ru.practicum.location.Location;
+import ru.practicum.location.model.dto.Location;
 
 import java.time.LocalDateTime;
 

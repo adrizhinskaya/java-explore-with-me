@@ -7,8 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import ru.practicum.exception.ValidationBadRequestException;
-import ru.practicum.location.Location;
+import ru.practicum.location.model.dto.Location;
 
 import java.time.LocalDateTime;
 

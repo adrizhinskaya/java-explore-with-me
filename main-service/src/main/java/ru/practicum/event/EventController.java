@@ -10,9 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.client.StatsClient;
-import ru.practicum.event.model.EventMapper;
-import ru.practicum.event.model.EventState;
 import ru.practicum.event.model.dto.*;
+import ru.practicum.event.model.enums.EventState;
 import ru.practicum.event.model.param.AdminEventParam;
 import ru.practicum.event.model.param.EventParam;
 import ru.practicum.logger.ColoredCRUDLogger;
@@ -32,6 +31,7 @@ public class EventController {
     private final StatsClient statsClient;
     private final EventService eventService;
     private final EventMapper eventMapper;
+
     @PostMapping("/users/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto create(@PathVariable Long userId,
@@ -66,11 +66,14 @@ public class EventController {
 
     @GetMapping("/users/{userId}/events")
     public List<EventShortDto> getAllByInitiator(@PathVariable Long userId,
-                                                 @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                                 @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                                 @PositiveOrZero @RequestParam(name = "from", defaultValue = "0")
+                                                 Integer from,
+                                                 @Positive @RequestParam(name = "size", defaultValue = "10")
+                                                 Integer size) {
         String url = String.format("MAIN /users/{%s}/events?{%s}&{%s}", userId, from, size);
         ColoredCRUDLogger.logGet(url);
-        List<EventShortDto> result = eventService.getAllByInitiator(userId, eventMapper.createPaginationEventParam(from, size));
+        List<EventShortDto> result = eventService
+                .getAllByInitiator(userId, eventMapper.createPaginationEventParam(from, size));
         ColoredCRUDLogger.logGetComplete(url, "size = " + result.size());
         return result;
     }
@@ -102,19 +105,24 @@ public class EventController {
                                       @RequestParam(required = false, name = "paid") Boolean paid,
                                       @RequestParam(required = false, name = "rangeStart") String rangeStart,
                                       @RequestParam(required = false, name = "rangeEnd") String rangeEnd,
-                                      @RequestParam(required = false, name = "onlyAvailable", defaultValue = "false") Boolean onlyAvailable,
-                                      @RequestParam(required = false, name = "sort", defaultValue = "PUBLISHED_ON") String sort,
-                                      @PositiveOrZero @RequestParam(required = false, name = "from", defaultValue = "0") Integer from,
-                                      @Positive @RequestParam(required = false, name = "size", defaultValue = "10") Integer size,
+                                      @RequestParam(required = false, name = "onlyAvailable", defaultValue = "false")
+                                      Boolean onlyAvailable,
+                                      @RequestParam(required = false, name = "sort", defaultValue = "PUBLISHED_ON")
+                                      String sort,
+                                      @PositiveOrZero @RequestParam(required = false, name = "from", defaultValue = "0")
+                                      Integer from,
+                                      @Positive @RequestParam(required = false, name = "size", defaultValue = "10")
+                                      Integer size,
                                       HttpServletRequest request) {
         String url = String.format("MAIN /events?{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}",
                 text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         ColoredCRUDLogger.logGet(url);
         LocalDateTime start = rangeStart == null ? null : LocalDateTime.parse(rangeStart, formatter);
-        LocalDateTime end = rangeEnd == null ? null :  LocalDateTime.parse(rangeEnd, formatter);
+        LocalDateTime end = rangeEnd == null ? null : LocalDateTime.parse(rangeEnd, formatter);
         statsClient.postStats("ewm-main-service", request.getRequestURI(), request.getRemoteAddr(),
                 LocalDateTime.now());
-        EventParam param = eventMapper.createEventParam(text, categories, paid, start, end, onlyAvailable, sort, from, size);
+        EventParam param = eventMapper
+                .createEventParam(text, categories, paid, start, end, onlyAvailable, sort, from, size);
         List<EventShortDto> result = eventService.getAll(param);
         ColoredCRUDLogger.logGetComplete(url, "size = " + result.size());
         return result;
@@ -126,13 +134,15 @@ public class EventController {
                                               @RequestParam(required = false, name = "categories") Set<Long> categories,
                                               @RequestParam(required = false, name = "rangeStart") String rangeStart,
                                               @RequestParam(required = false, name = "rangeEnd") String rangeEnd,
-                                              @PositiveOrZero @RequestParam(required = false, name = "from", defaultValue = "0") Integer from,
-                                              @Positive @RequestParam(required = false, name = "size", defaultValue = "10") Integer size) {
+                                              @PositiveOrZero @RequestParam(required = false, name = "from",
+                                                      defaultValue = "0") Integer from,
+                                              @Positive @RequestParam(required = false, name = "size",
+                                                      defaultValue = "10") Integer size) {
         String url = String.format("MAIN /admin/events?{%s}&{%s}&{%s}&{%s}&{%s}&{%s}&{%s}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
         ColoredCRUDLogger.logGet(url);
         LocalDateTime start = rangeStart == null ? null : LocalDateTime.parse(rangeStart, formatter);
-        LocalDateTime end = rangeEnd == null ? null :  LocalDateTime.parse(rangeEnd, formatter);
+        LocalDateTime end = rangeEnd == null ? null : LocalDateTime.parse(rangeEnd, formatter);
         AdminEventParam param = eventMapper.createAdminEventParam(users, states, categories, start, end, from, size);
         List<EventFullDto> result = eventService.getAllFromAdmin(param);
         ColoredCRUDLogger.logGetComplete(url, "size = " + result.size());

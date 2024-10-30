@@ -4,17 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.event.EventRepository;
 import ru.practicum.event.model.EventEntity;
-
-import ru.practicum.event.model.EventState;
+import ru.practicum.event.model.enums.EventState;
 import ru.practicum.exception.ConstraintConflictException;
 import ru.practicum.exception.EntityNotFoundException;
 import ru.practicum.request.model.RequestEntity;
-import ru.practicum.request.model.RequestMapper;
 import ru.practicum.request.model.RequestParam;
-import ru.practicum.request.model.RequestStatus;
 import ru.practicum.request.model.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.request.model.dto.EventRequestStatusUpdateResult;
 import ru.practicum.request.model.dto.ParticipationRequestDto;
+import ru.practicum.request.model.enums.RequestStatus;
 import ru.practicum.user.UserRepository;
 import ru.practicum.user.model.UserEntity;
 

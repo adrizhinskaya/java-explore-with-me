@@ -2,9 +2,8 @@ package ru.practicum.event.model.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.AssertTrue;
 import lombok.*;
-import ru.practicum.event.model.AdminStateAction;
+import ru.practicum.event.model.enums.AdminStateAction;
 import ru.practicum.exception.ValidationBadRequestException;
 
 import java.time.LocalDateTime;

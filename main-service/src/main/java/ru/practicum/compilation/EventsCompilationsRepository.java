@@ -4,16 +4,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.practicum.compilation.model.EventCompilationEntity;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import ru.practicum.compilation.model.EventsCompilationsId;
-import ru.practicum.event.model.EventEntity;
+import ru.practicum.compilation.model.EventCompilationId;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface EventsCompilationsRepository extends JpaRepository<EventCompilationEntity, EventsCompilationsId> {
+public interface EventsCompilationsRepository extends JpaRepository<EventCompilationEntity, EventCompilationId> {
     List<EventCompilationEntity> findAllByCompilationId(Long compilationId);
+
     @Query("SELECT ec.event.id " +
             "FROM EventCompilationEntity ec " +
             "WHERE ec.compilation.id = :compilationId ")

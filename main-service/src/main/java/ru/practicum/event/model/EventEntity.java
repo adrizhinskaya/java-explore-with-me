@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.categorie.model.CategoryEntity;
-import ru.practicum.location.Location;
-import ru.practicum.location.LocationEntity;
+import ru.practicum.event.model.enums.EventState;
+import ru.practicum.location.model.LocationEntity;
 import ru.practicum.user.model.UserEntity;
 
 import java.time.LocalDateTime;
@@ -25,8 +25,6 @@ public class EventEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
-    //@Column(name = "confirmed_requests")
-    //private Long confirmedRequests; // не нужно в бд, оно подсчитывается
     @Column(name = "created_on")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdOn;
@@ -45,11 +43,10 @@ public class EventEntity {
     private Integer participantLimit;
     @Column(name = "published_on")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime publishedOn; // меняется в методе по апруву
+    private LocalDateTime publishedOn;
     @Column(name = "request_moderation")
     private Boolean requestModeration;
     @Enumerated(EnumType.STRING)
-    private EventState state; // меняется в методе по апруву
+    private EventState state;
     private String title;
-    //private Long views; // не нужно в бд, оно подсчитывается
 }

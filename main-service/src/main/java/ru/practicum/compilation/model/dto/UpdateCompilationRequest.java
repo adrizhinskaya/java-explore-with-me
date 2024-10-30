@@ -1,6 +1,5 @@
 package ru.practicum.compilation.model.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 

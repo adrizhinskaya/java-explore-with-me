@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import ru.practicum.event.model.EventEntity;
-import ru.practicum.event.model.QEventEntity;
 
 import java.util.List;
 import java.util.Set;

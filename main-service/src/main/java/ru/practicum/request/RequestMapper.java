@@ -1,7 +1,9 @@
-package ru.practicum.request.model;
+package ru.practicum.request;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import ru.practicum.request.model.RequestEntity;
+import ru.practicum.request.model.RequestParam;
 import ru.practicum.request.model.dto.ParticipationRequestDto;
 
 import java.util.ArrayList;

@@ -1,23 +1,25 @@
-package ru.practicum.event.model;
+package ru.practicum.event;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import ru.practicum.categorie.CategoryMapper;
 import ru.practicum.categorie.model.CategoryEntity;
-import ru.practicum.categorie.model.CategoryMapper;
 import ru.practicum.categorie.model.dto.CategoryDto;
+import ru.practicum.event.model.EventEntity;
 import ru.practicum.event.model.dto.EventFullDto;
 import ru.practicum.event.model.dto.EventShortDto;
 import ru.practicum.event.model.dto.NewEventDto;
+import ru.practicum.event.model.enums.EventState;
 import ru.practicum.event.model.param.AdminEventParam;
 import ru.practicum.event.model.param.EventParam;
 import ru.practicum.event.model.param.EventUpdateParam;
 import ru.practicum.event.model.param.PaginationEventParam;
 import ru.practicum.exception.ValidationBadRequestException;
-import ru.practicum.location.Location;
-import ru.practicum.location.LocationEntity;
 import ru.practicum.location.LocationMapper;
+import ru.practicum.location.model.LocationEntity;
+import ru.practicum.location.model.dto.Location;
+import ru.practicum.user.UserMapper;
 import ru.practicum.user.model.UserEntity;
-import ru.practicum.user.model.UserMapper;
 import ru.practicum.user.model.dto.UserShortDto;
 
 import java.time.LocalDateTime;

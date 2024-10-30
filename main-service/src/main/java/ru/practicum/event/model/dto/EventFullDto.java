@@ -3,8 +3,8 @@ package ru.practicum.event.model.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import ru.practicum.categorie.model.dto.CategoryDto;
-import ru.practicum.event.model.EventState;
-import ru.practicum.location.Location;
+import ru.practicum.event.model.enums.EventState;
+import ru.practicum.location.model.dto.Location;
 import ru.practicum.user.model.dto.UserShortDto;
 
 import java.time.LocalDateTime;

@@ -1,9 +1,8 @@
-package ru.practicum.user.model;
+package ru.practicum.user;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
+import ru.practicum.user.model.UserEntity;
 import ru.practicum.user.model.dto.NewUserRequest;
 import ru.practicum.user.model.dto.UserDto;
 import ru.practicum.user.model.dto.UserParam;

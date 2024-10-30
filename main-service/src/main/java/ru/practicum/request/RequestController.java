@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.logger.ColoredCRUDLogger;
-import ru.practicum.request.model.RequestMapper;
 import ru.practicum.request.model.dto.EventRequestStatusUpdateRequest;
 import ru.practicum.request.model.dto.EventRequestStatusUpdateResult;
 import ru.practicum.request.model.dto.ParticipationRequestDto;

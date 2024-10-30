@@ -1,12 +1,9 @@
 package ru.practicum.categorie;
 
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.categorie.model.CategoryEntity;
-import ru.practicum.categorie.model.CategoryMapper;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.categorie.model.dto.NewCategoryDto;
 import ru.practicum.event.EventRepository;
@@ -25,18 +22,6 @@ public class CategoryServiceImpl implements CategoryService {
     private final EventRepository eventRepository;
     private final CategoryMapper mapper;
 
-    private CategoryEntity categoryExistCheck(Long catId) {
-        return categoryRepository.findById(catId).orElseThrow(() ->
-                new EntityNotFoundException("Category not found"));
-    }
-
-    private void nameAlreadyExistCheck(String newName, Long categoryId) {
-        Optional<CategoryEntity> category = categoryRepository.findFirstByName(newName);
-        if(category.isPresent() && !Objects.equals(category.get().getId(), categoryId)) {
-            throw new ConstraintConflictException("Such categorie name already exsists .");
-        }
-    }
-
     @Override
     public CategoryDto create(NewCategoryDto newCategoryDto) {
         nameAlreadyExistCheck(newCategoryDto.getName(), 0L);
@@ -46,7 +31,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getAll(Integer from, Integer size) {
-        List<CategoryEntity> entities = getAllWithPagination(from, size, null);
+        List<CategoryEntity> entities = getAllWithPagination(from, size);
         return mapper.toCategoryDto(entities);
     }
 
@@ -66,17 +51,29 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void delete(Long catId) {
-        if(eventRepository.findFirstByCategoryId(catId).isPresent()) {
-            throw new ConstraintConflictException("With this category associated some events .");
+        if (eventRepository.findFirstByCategoryId(catId).isPresent()) {
+            throw new ConstraintConflictException("Can`t delete category, associated with some events .");
         }
         categoryRepository.deleteById(catId);
     }
 
-    private List<CategoryEntity> getAllWithPagination(int from, int size, Sort sort) {
+    private CategoryEntity categoryExistCheck(Long catId) {
+        return categoryRepository.findById(catId).orElseThrow(() ->
+                new EntityNotFoundException("Category not found"));
+    }
+
+    private void nameAlreadyExistCheck(String newName, Long categoryId) {
+        Optional<CategoryEntity> category = categoryRepository.findFirstByName(newName);
+        if (category.isPresent() && !Objects.equals(category.get().getId(), categoryId)) {
+            throw new ConstraintConflictException("Such category name already exsists .");
+        }
+    }
+
+    private List<CategoryEntity> getAllWithPagination(int from, int size) {
         PaginationHelper<CategoryEntity> ph = new PaginationHelper<>(from, size);
-        Page<CategoryEntity> firstPage = categoryRepository.findAll(ph.getPageRequestForFirstPage(sort));
+        Page<CategoryEntity> firstPage = categoryRepository.findAll(ph.getPageRequestForFirstPage(null));
         Page<CategoryEntity> nextPage = firstPage.hasNext() ?
-                categoryRepository.findAll(ph.getPageRequestForNextPage(sort)) : null;
+                categoryRepository.findAll(ph.getPageRequestForNextPage(null)) : null;
         return ph.mergePages(firstPage, nextPage);
     }
 }

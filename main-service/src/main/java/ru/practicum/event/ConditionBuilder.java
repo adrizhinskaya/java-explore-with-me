@@ -2,8 +2,8 @@ package ru.practicum.event;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.stereotype.Component;
-import ru.practicum.event.model.EventState;
 import ru.practicum.event.model.QEventEntity;
+import ru.practicum.event.model.enums.EventState;
 import ru.practicum.event.model.param.AdminEventParam;
 import ru.practicum.event.model.param.EventParam;
 
@@ -66,7 +66,8 @@ public class ConditionBuilder {
         }
     }
 
-    private void addTimeCondition(LocalDateTime rangeStart, LocalDateTime rangeEnd, List<BooleanExpression> conditions) {
+    private void addTimeCondition(LocalDateTime rangeStart, LocalDateTime rangeEnd,
+                                  List<BooleanExpression> conditions) {
         QEventEntity event = QEventEntity.eventEntity;
         if (rangeStart != null && rangeEnd != null) {
             conditions.add(event.eventDate.between(rangeStart, rangeEnd));

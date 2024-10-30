@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.compilation.model.CompilationMapper;
 import ru.practicum.compilation.model.dto.CompilationDto;
 import ru.practicum.compilation.model.dto.NewCompilationDto;
 import ru.practicum.compilation.model.dto.UpdateCompilationRequest;
@@ -21,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompilationController {
     private final CompilationService compilationService;
-    private final CompilationMapper compilationMapper;
 
     @PostMapping("/admin/compilations")
     @ResponseStatus(HttpStatus.CREATED)

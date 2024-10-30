@@ -2,7 +2,6 @@ package ru.practicum.request.model.dto;
 
 import lombok.*;
 
-import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor

@@ -1,12 +1,10 @@
-package ru.practicum.categorie.model;
+package ru.practicum.categorie;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.MappingTarget;
+import ru.practicum.categorie.model.CategoryEntity;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.categorie.model.dto.NewCategoryDto;
-import ru.practicum.user.model.UserEntity;
-import ru.practicum.user.model.dto.UserDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +33,7 @@ public class CategoryMapper {
     }
 
     public void update(NewCategoryDto dto, CategoryEntity entity) {
-        if(dto.getName() != null) {
+        if (dto.getName() != null) {
             entity.setName(dto.getName());
         }
     }

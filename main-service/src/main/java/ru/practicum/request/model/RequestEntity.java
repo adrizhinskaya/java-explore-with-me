@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.event.model.EventEntity;
-import ru.practicum.event.model.EventState;
+import ru.practicum.request.model.enums.RequestStatus;
 import ru.practicum.user.model.UserEntity;
 
 import java.time.LocalDateTime;

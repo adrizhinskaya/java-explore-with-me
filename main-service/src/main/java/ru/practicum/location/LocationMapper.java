@@ -2,6 +2,8 @@ package ru.practicum.location;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+import ru.practicum.location.model.LocationEntity;
+import ru.practicum.location.model.dto.Location;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public class LocationMapper {

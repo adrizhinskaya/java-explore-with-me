@@ -2,16 +2,14 @@ package ru.practicum.event;
 
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.mapping.Collection;
 import org.springframework.stereotype.Service;
 import ru.practicum.client.StatsClient;
 import ru.practicum.dto.ViewStats;
 import ru.practicum.event.model.EventEntity;
-import ru.practicum.event.model.EventMapper;
 import ru.practicum.event.model.dto.EventFullDto;
 import ru.practicum.event.model.dto.EventShortDto;
 import ru.practicum.request.RequestRepository;
-import ru.practicum.request.model.RequestStatus;
+import ru.practicum.request.model.enums.RequestStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,7 +28,7 @@ public class ViewsService {
     private final EventMapper eventMapper;
 
     public List<EventShortDto> toEventShortDtos(List<EventEntity> events, Boolean unique) {
-        if(events == null || events.isEmpty()) {
+        if (events == null || events.isEmpty()) {
             return Collections.emptyList();
         }
         Map<Long, Long> hitsMap = getEventsViewsMap(null, null, events, unique);
@@ -47,7 +45,8 @@ public class ViewsService {
         return requestRepository.countAllByEventIdAndStatusIs(eventId, RequestStatus.CONFIRMED);
     }
 
-    public List<EventFullDto> toEventFullDtos(@Nullable LocalDateTime start, @Nullable LocalDateTime end, List<EventEntity> events, Boolean unique) {
+    public List<EventFullDto> toEventFullDtos(@Nullable LocalDateTime start, @Nullable LocalDateTime end,
+                                              List<EventEntity> events, Boolean unique) {
         Map<Long, Long> hitsMap = getEventsViewsMap(start, end, events, unique);
         return events.stream()
                 .map(event -> {
@@ -57,7 +56,9 @@ public class ViewsService {
                 })
                 .collect(Collectors.toList());
     }
-    private Map<Long, Long> getEventsViewsMap(@Nullable LocalDateTime start, @Nullable LocalDateTime end, List<EventEntity> events, Boolean unique) {
+
+    private Map<Long, Long> getEventsViewsMap(@Nullable LocalDateTime start, @Nullable LocalDateTime end,
+                                              List<EventEntity> events, Boolean unique) {
         List<String> itemUris = events.stream()
                 .map(event -> "/events/" + event.getId())
                 .collect(Collectors.toList());
@@ -68,13 +69,12 @@ public class ViewsService {
 
         return stats.stream()
                 .collect(Collectors.toMap(
-                        stat -> extractIdFromUri(stat.getUri()), // Извлекаем id из uri
-                        ViewStats::getHits // Получаем количество просмотров
+                        stat -> extractIdFromUri(stat.getUri()),
+                        ViewStats::getHits
                 ));
     }
 
     private Long extractIdFromUri(String uri) {
-        // Отбрасываем часть строки "/events/" и парсим id
         String idString = uri.replace("/events/", "");
         return Long.valueOf(idString);
     }
