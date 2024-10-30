@@ -1,10 +1,9 @@
 package ru.practicum.event.model;
 
-import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import ru.practicum.categorie.model.CategoryEntity;
+import ru.practicum.categorie.model.CategoryMapper;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.event.model.dto.EventFullDto;
 import ru.practicum.event.model.dto.EventShortDto;
@@ -16,72 +15,79 @@ import ru.practicum.event.model.param.PaginationEventParam;
 import ru.practicum.exception.ValidationBadRequestException;
 import ru.practicum.location.Location;
 import ru.practicum.location.LocationEntity;
+import ru.practicum.location.LocationMapper;
 import ru.practicum.user.model.UserEntity;
+import ru.practicum.user.model.UserMapper;
 import ru.practicum.user.model.dto.UserShortDto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-@RequiredArgsConstructor
 public class EventMapper {
-    public EventEntity toEventEntity(NewEventDto newEventDto, CategoryEntity category, UserEntity user,
-                                     LocationEntity location, EventState state) {
+    private final CategoryMapper categoryMapper;
+    private final UserMapper userMapper;
+    private final LocationMapper locationMapper;
+
+    public EventMapper() {
+        this.categoryMapper = new CategoryMapper();
+        this.userMapper = new UserMapper();
+        this.locationMapper = new LocationMapper();
+    }
+
+    public EventEntity toEventEntity(NewEventDto dto, CategoryEntity category, UserEntity user, LocationEntity location,
+                                     EventState state) {
         return EventEntity.builder()
-                .annotation(newEventDto.getAnnotation())
+                .annotation(dto.getAnnotation())
                 .category(category)
-                .description(newEventDto.getDescription())
-                .eventDate(newEventDto.getEventDate())
+                .description(dto.getDescription())
+                .eventDate(dto.getEventDate())
                 .initiator(user)
                 .location(location)
-                .paid(newEventDto.getPaid() == null ? false : newEventDto.getPaid())
-                .participantLimit(newEventDto.getParticipantLimit() == null ? 0 : newEventDto.getParticipantLimit())
-                .requestModeration(newEventDto.getRequestModeration() == null ? true : newEventDto.getRequestModeration())
+                .paid(dto.getPaid() == null ? false : dto.getPaid())
+                .participantLimit(dto.getParticipantLimit() == null ? 0 : dto.getParticipantLimit())
+                .requestModeration(dto.getRequestModeration() == null ? true : dto.getRequestModeration())
                 .state(state)
-                .title(newEventDto.getTitle())
+                .title(dto.getTitle())
                 .build();
     }
 
-    public EventFullDto toEventFullDto(EventEntity eventEntity,
-                                       CategoryDto categoryDto,
-                                       UserShortDto userShortDto,
-                                       Location location,
-                                       Long confirmedRequests,
-                                       Long views) {
+    public EventFullDto toEventFullDto(EventEntity entity, Long confirmedRequests, Long views) {
+        CategoryDto categoryDto = categoryMapper.toCategoryDto(entity.getCategory());
+        UserShortDto userShortDto = userMapper.toUserShortDto(entity.getInitiator());
+        Location location = locationMapper.toLocation(entity.getLocation());
         return EventFullDto.builder()
-                .id(eventEntity.getId())
-                .annotation(eventEntity.getAnnotation())
+                .id(entity.getId())
+                .annotation(entity.getAnnotation())
                 .category(categoryDto)
                 .confirmedRequests(confirmedRequests)
-                .createdOn(eventEntity.getCreatedOn())
-                .description(eventEntity.getDescription())
-                .eventDate(eventEntity.getEventDate())
+                .createdOn(entity.getCreatedOn())
+                .description(entity.getDescription())
+                .eventDate(entity.getEventDate())
                 .initiator(userShortDto)
                 .location(location)
-                .paid(eventEntity.getPaid())
-                .participantLimit(eventEntity.getParticipantLimit())
-                .publishedOn(eventEntity.getPublishedOn())
-                .requestModeration(eventEntity.getRequestModeration())
-                .state(eventEntity.getState())
-                .title(eventEntity.getTitle())
+                .paid(entity.getPaid())
+                .participantLimit(entity.getParticipantLimit())
+                .publishedOn(entity.getPublishedOn())
+                .requestModeration(entity.getRequestModeration())
+                .state(entity.getState())
+                .title(entity.getTitle())
                 .views(views)
                 .build();
     }
 
-    public EventShortDto toEventShortDto(EventEntity eventEntity,
-                                         CategoryDto categoryDto,
-                                         UserShortDto userShortDto,
-                                         Long confirmedRequests,
-                                         Long views) {
+    public EventShortDto toEventShortDto(EventEntity entity, Long confirmedRequests, Long views) {
+        CategoryDto categoryDto = categoryMapper.toCategoryDto(entity.getCategory());
+        UserShortDto userShortDto = userMapper.toUserShortDto(entity.getInitiator());
         return EventShortDto.builder()
-                .id(eventEntity.getId())
-                .annotation(eventEntity.getAnnotation())
+                .id(entity.getId())
+                .annotation(entity.getAnnotation())
                 .category(categoryDto)
                 .confirmedRequests(confirmedRequests)
-                .eventDate(eventEntity.getEventDate())
+                .eventDate(entity.getEventDate())
                 .initiator(userShortDto)
-                .paid(eventEntity.getPaid())
-                .title(eventEntity.getTitle())
+                .paid(entity.getPaid())
+                .title(entity.getTitle())
                 .views(views)
                 .build();
     }
@@ -117,8 +123,8 @@ public class EventMapper {
     }
 
     private void validateEventParam(Set<Long> categories,
-                                          LocalDateTime rangeStart,
-                                          LocalDateTime rangeEnd) {
+                                    LocalDateTime rangeStart,
+                                    LocalDateTime rangeEnd) {
         if (categories != null && !categories.stream().allMatch(id -> id > 0)) {
             throw new ValidationBadRequestException("Some id in categories are not valid.");
         }

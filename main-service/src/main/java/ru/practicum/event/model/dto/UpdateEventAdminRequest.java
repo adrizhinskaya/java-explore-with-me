@@ -18,7 +18,6 @@ public class UpdateEventAdminRequest extends UpdateEventRequest {
     @Enumerated(EnumType.STRING)
     private AdminStateAction stateAction;
 
-    @Override
     public void setEventDate(LocalDateTime eventDate) {
         if (eventDate != null && eventDate.isBefore(LocalDateTime.now().plusHours(1))) {
             throw new ValidationBadRequestException("EventDate must be at least 1 hour from now");

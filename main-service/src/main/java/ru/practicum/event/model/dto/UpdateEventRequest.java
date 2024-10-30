@@ -28,7 +28,6 @@ public abstract class UpdateEventRequest {
     protected String description;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    //@Future
     protected LocalDateTime eventDate;
 
     protected Location location;
@@ -43,11 +42,4 @@ public abstract class UpdateEventRequest {
     @Size(min = 3, message = "Event title name must be longer than 3 symbols")
     @Size(max = 120, message = "Event title must be shorter than 120 symbols")
     protected String title;
-
-    public void setEventDate(LocalDateTime eventDate) {
-        if (eventDate != null && eventDate.isBefore(LocalDateTime.now().plusHours(2))) {
-            throw new ValidationBadRequestException("EventDate must be at least 2 hours from now");
-        }
-        this.eventDate = eventDate;
-    }
 }

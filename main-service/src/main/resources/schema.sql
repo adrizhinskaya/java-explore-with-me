@@ -1,3 +1,5 @@
+drop table IF EXISTS events_compilations;
+drop table IF EXISTS compilations;
 drop table IF EXISTS requests;
 drop table IF EXISTS events;
 drop table IF EXISTS users;
@@ -41,7 +43,7 @@ create TABLE IF NOT EXISTS events (
   title VARCHAR(120) NOT NULL,
   CONSTRAINT fk_events_to_categories FOREIGN KEY(category_id) REFERENCES categories(id) ON DELETE CASCADE,
   CONSTRAINT fk_events_to_users FOREIGN KEY(initiator_id) REFERENCES users(id) ON DELETE CASCADE,
-  CONSTRAINT fk_events_to_locations FOREIGN KEY(location_id) REFERENCES locations(id)
+  CONSTRAINT fk_events_to_locations FOREIGN KEY(location_id) REFERENCES locations(id) ON DELETE CASCADE
 );
 
 create TABLE IF NOT EXISTS requests (
@@ -52,4 +54,19 @@ create TABLE IF NOT EXISTS requests (
   status VARCHAR(10),
   CONSTRAINT fk_requests_to_events FOREIGN KEY(event_id) REFERENCES events(id) ON DELETE CASCADE,
   CONSTRAINT fk_requests_to_users FOREIGN KEY(requester_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+create TABLE IF NOT EXISTS compilations (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  title VARCHAR(50) NOT NULL,
+  pinned BOOL NOT NULL,
+  CONSTRAINT uq_compilation_title UNIQUE (title)
+);
+
+CREATE TABLE IF NOT EXISTS events_compilations (
+    compilation_id BIGINT NOT NULL,
+    event_id BIGINT NOT NULL,
+    PRIMARY KEY (compilation_id, event_id),
+    FOREIGN KEY (compilation_id) REFERENCES compilations(id) ON DELETE CASCADE,
+    FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE
 );

@@ -9,11 +9,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Setter
 @Getter
+@Setter
 @ToString
-public class NewCompilationDto {
-    @NotBlank
+public class UpdateCompilationRequest {
     @Size(min = 1, message = "{validation.annotation.size.too_short}")
     @Size(max = 50, message = "{validation.annotation.size.too_long}")
     private String title;

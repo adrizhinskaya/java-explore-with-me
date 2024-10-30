@@ -9,22 +9,41 @@ import ru.practicum.user.model.dto.UserDto;
 import ru.practicum.user.model.dto.UserParam;
 import ru.practicum.user.model.dto.UserShortDto;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Mapper(
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
-public abstract class UserMapper {
-    public abstract UserEntity toUserEntity(NewUserRequest dto);
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public class UserMapper {
+    public UserEntity toUserEntity(NewUserRequest dto) {
+        return UserEntity.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .build();
+    }
 
-    public abstract UserDto toUserDto(UserEntity dto);
+    public UserDto toUserDto(UserEntity entity) {
+        return UserDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
+                .email(entity.getEmail())
+                .build();
+    }
 
-    public abstract List<UserDto> toUserDto(Iterable<UserEntity> dto);
+    public List<UserDto> toUserDto(Iterable<UserEntity> entities) {
+        List<UserDto> dtos = new ArrayList<>();
+        for (UserEntity entity : entities) {
+            dtos.add(toUserDto(entity));
+        }
+        return dtos;
+    }
 
-    public abstract UserShortDto toUserShortDto(UserEntity dto);
+    public UserShortDto toUserShortDto(UserEntity dto) {
+        return UserShortDto.builder()
+                .id(dto.getId())
+                .name(dto.getEmail())
+                .build();
+    }
 
     public UserParam createUserParam(Set<Long> ids, Integer from, Integer size) {
         return UserParam.builder()

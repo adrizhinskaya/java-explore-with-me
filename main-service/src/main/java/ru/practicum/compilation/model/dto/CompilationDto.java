@@ -15,9 +15,9 @@ import java.util.List;
 public class CompilationDto {
     @NotNull
     private Long id;
-    private List<EventShortDto> events;
-    @NotNull
-    private Boolean pinned;
     @NotBlank
     private String title;
+    @NotNull
+    private Boolean pinned;
+    private List<EventShortDto> events;
 }

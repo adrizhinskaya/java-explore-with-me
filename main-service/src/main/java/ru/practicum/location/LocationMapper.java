@@ -2,17 +2,21 @@ package ru.practicum.location;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.NullValuePropertyMappingStrategy;
-import org.mapstruct.ReportingPolicy;
 
-@Mapper(
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
-        componentModel = MappingConstants.ComponentModel.SPRING,
-        unmappedTargetPolicy = ReportingPolicy.IGNORE
-)
-public abstract class LocationMapper {
-    public abstract LocationEntity toLocationEntity(Location location);
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public class LocationMapper {
+    public LocationEntity toLocationEntity(Location location) {
+        return LocationEntity.builder()
+                .lat(location.getLat())
+                .lon(location.getLon())
+                .build();
+    }
 
-    public abstract Location toLocation(LocationEntity locationEntity);
+    public Location toLocation(LocationEntity entity) {
+        return Location.builder()
+                .lat(entity.getLat())
+                .lon(entity.getLon())
+                .build();
+    }
 }
 
