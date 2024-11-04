@@ -4,10 +4,6 @@ import ru.practicum.event.model.EventEntity;
 import ru.practicum.event.model.enums.AdminStateAction;
 import ru.practicum.event.model.enums.EventState;
 import ru.practicum.event.model.enums.UserStateAction;
-import ru.practicum.event.model.enums.stateMachine.CanceledState;
-import ru.practicum.event.model.enums.stateMachine.EventStateHandler;
-import ru.practicum.event.model.enums.stateMachine.PendingState;
-import ru.practicum.event.model.enums.stateMachine.PublishedState;
 import ru.practicum.exception.ConstraintConflictException;
 
 import java.util.HashMap;

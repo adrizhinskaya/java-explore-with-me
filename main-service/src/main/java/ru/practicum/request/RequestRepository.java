@@ -25,7 +25,7 @@ public interface RequestRepository extends JpaRepository<RequestEntity, Long> {
                                                     @Param("eventId") Long eventId);
 
     Long countAllByEventIdAndStatusIs(Long eventId, RequestStatus status);
-    //Long countAllByEventIdsAndStatusIs(List<Long> eventIds, RequestStatus status);
+
     @Query("SELECT new ru.practicum.event.model.dto.EventShort(r.event.id, COUNT(r.event.id)) " +
             "FROM RequestEntity r " +
             "WHERE r.event.id IN :eventIds AND r.status = :status " +
