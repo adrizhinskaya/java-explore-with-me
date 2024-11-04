@@ -38,7 +38,9 @@ public class ViewsService {
         return events.stream()
                 .map(event -> {
                     Long views = hitsMap.get(event.getId());
-                    return eventMapper.toEventShortDto(event, eventsConfirmedRequests.get(event.getId()),
+                    Long confReq = eventsConfirmedRequests.get(event.getId());
+                    return eventMapper.toEventShortDto(event,
+                            confReq != null ? confReq : 0L,
                             views != null ? views : 0L);
                 })
                 .collect(Collectors.toList());
@@ -61,7 +63,9 @@ public class ViewsService {
         return events.stream()
                 .map(event -> {
                     Long views = hitsMap.get(event.getId());
-                    return eventMapper.toEventFullDto(event, eventsConfirmedRequests.get(event.getId()),
+                    Long confReq = eventsConfirmedRequests.get(event.getId());
+                    return eventMapper.toEventFullDto(event,
+                            confReq != null ? confReq : 0L,
                             views != null ? views : 0L);
                 })
                 .collect(Collectors.toList());

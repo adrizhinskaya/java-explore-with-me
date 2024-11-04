@@ -12,7 +12,6 @@ import ru.practicum.event.model.dto.*;
 import ru.practicum.event.model.enums.AdminStateAction;
 import ru.practicum.event.model.enums.EventState;
 import ru.practicum.event.model.enums.UserStateAction;
-import ru.practicum.event.model.enums.stateMachine.StateMachine;
 import ru.practicum.event.model.param.AdminEventParam;
 import ru.practicum.event.model.param.EventParam;
 import ru.practicum.event.model.param.EventUpdateParam;
@@ -125,15 +124,41 @@ public class EventServiceImpl implements EventService {
     }
 
     private void checkStateAndUpdate(UserStateAction state, EventEntity event) {
-        if (state == null) return;
-        StateMachine stateMachine = new StateMachine();
-        stateMachine.updateEventState(event, state);
+        if (state != null) {
+            switch (state) {
+                case CANCEL_REVIEW:
+                    if (event.getState().equals(EventState.PENDING)) {
+                        event.setState(EventState.CANCELED);
+                    } else {
+                        throw new ConstraintConflictException("Invalid stateAction .");
+                    }
+                    break;
+                case SEND_TO_REVIEW:
+                    if (event.getState().equals(EventState.CANCELED)) {
+                        event.setState(EventState.PENDING);
+                    } else {
+                        throw new ConstraintConflictException("Invalid stateAction .");
+                    }
+                    break;
+            }
+        }
     }
 
-    private void checkStateAndUpdate(AdminStateAction action, EventEntity event) {
-        if (action == null) return;
-        StateMachine stateMachine = new StateMachine();
-        stateMachine.updateEventState(event, action);
+    private void checkStateAndUpdate(AdminStateAction state, EventEntity event) {
+        if (state != null) {
+            if (!event.getState().equals(EventState.PENDING)) {
+                throw new ConstraintConflictException("Invalid stateAction .");
+            }
+            switch (state) {
+                case REJECT_EVENT:
+                    event.setState(EventState.CANCELED);
+                    break;
+                case PUBLISH_EVENT:
+                    event.setState(EventState.PUBLISHED);
+                    event.setPublishedOn(LocalDateTime.now());
+                    break;
+            }
+        }
     }
 
     private EventEntity updateEntityFields(EventEntity event, UpdateEventRequest updated) {
