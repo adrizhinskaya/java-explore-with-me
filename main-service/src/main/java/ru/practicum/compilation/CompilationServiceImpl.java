@@ -83,9 +83,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     private boolean pinnedValidation(Boolean pinned) {
-        if (pinned == null) {
-            return false;
-        }
+        if (pinned == null) return false;
         return pinned;
     }
 

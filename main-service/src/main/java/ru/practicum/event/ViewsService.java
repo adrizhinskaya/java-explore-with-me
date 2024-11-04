@@ -7,6 +7,7 @@ import ru.practicum.client.StatsClient;
 import ru.practicum.dto.ViewStats;
 import ru.practicum.event.model.EventEntity;
 import ru.practicum.event.model.dto.EventFullDto;
+import ru.practicum.event.model.dto.EventShort;
 import ru.practicum.event.model.dto.EventShortDto;
 import ru.practicum.request.RequestRepository;
 import ru.practicum.request.model.enums.RequestStatus;
@@ -31,36 +32,45 @@ public class ViewsService {
         if (events == null || events.isEmpty()) {
             return Collections.emptyList();
         }
-        Map<Long, Long> hitsMap = getEventsViewsMap(null, null, events, unique);
+        List<Long> eventIds = events.stream().map(EventEntity::getId).collect(Collectors.toList());
+        Map<Long, Long> hitsMap = getEventsViewsMap(null, null, eventIds, unique);
+        Map<Long, Long> eventsConfirmedRequests = getConfirmedRequests(eventIds);
         return events.stream()
                 .map(event -> {
                     Long views = hitsMap.get(event.getId());
-                    return eventMapper.toEventShortDto(event, getConfirmedRequests(event.getId()),
+                    return eventMapper.toEventShortDto(event, eventsConfirmedRequests.get(event.getId()),
                             views != null ? views : 0L);
                 })
                 .collect(Collectors.toList());
     }
 
-    private Long getConfirmedRequests(Long eventId) {
-        return requestRepository.countAllByEventIdAndStatusIs(eventId, RequestStatus.CONFIRMED);
+    private Map<Long, Long> getConfirmedRequests(List<Long> eventIds) {
+        List<EventShort> events = requestRepository.countAllByEventIdsAndStatusIs(eventIds, RequestStatus.CONFIRMED);
+        return events.stream()
+                .collect(Collectors.toMap(EventShort::getEventId, EventShort::getConfirmedRequests));
     }
 
     public List<EventFullDto> toEventFullDtos(@Nullable LocalDateTime start, @Nullable LocalDateTime end,
                                               List<EventEntity> events, Boolean unique) {
-        Map<Long, Long> hitsMap = getEventsViewsMap(start, end, events, unique);
+        if (events == null || events.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> eventIds = events.stream().map(EventEntity::getId).collect(Collectors.toList());
+        Map<Long, Long> hitsMap = getEventsViewsMap(start, end, eventIds, unique);
+        Map<Long, Long> eventsConfirmedRequests = getConfirmedRequests(eventIds);
         return events.stream()
                 .map(event -> {
                     Long views = hitsMap.get(event.getId());
-                    return eventMapper.toEventFullDto(event, getConfirmedRequests(event.getId()),
+                    return eventMapper.toEventFullDto(event, eventsConfirmedRequests.get(event.getId()),
                             views != null ? views : 0L);
                 })
                 .collect(Collectors.toList());
     }
 
     private Map<Long, Long> getEventsViewsMap(@Nullable LocalDateTime start, @Nullable LocalDateTime end,
-                                              List<EventEntity> events, Boolean unique) {
-        List<String> itemUris = events.stream()
-                .map(event -> "/events/" + event.getId())
+                                              List<Long> eventIds, Boolean unique) {
+        List<String> itemUris = eventIds.stream()
+                .map(id -> "/events/" + id)
                 .collect(Collectors.toList());
 
         String startFormatter = start != null ? start.format(formatter) : "1970-01-01 00:00:00";
