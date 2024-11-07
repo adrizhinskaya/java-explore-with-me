@@ -40,7 +40,7 @@ public class UserMapper {
     public UserShortDto toUserShortDto(UserEntity dto) {
         return UserShortDto.builder()
                 .id(dto.getId())
-                .name(dto.getEmail())
+                .name(dto.getName())
                 .build();
     }
 
