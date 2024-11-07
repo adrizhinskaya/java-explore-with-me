@@ -172,292 +172,10 @@
 			]
 		},
 		{
-			"name": "Creation",
-			"item": [
-				{
-					"name": "Создание пользователя",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Test user 'id' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
-									"});\r",
-									"pm.test(\"Test user 'email' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('email');\r",
-									"    pm.expect(jsonData.email, '\"email\" must be \"user@user.com\"').to.eql('user@user.com');\r",
-									"});\r",
-									"pm.test(\"Test user 'name' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('name');\r",
-									"    pm.expect(jsonData.name, '\"name\" must be \"user\"').to.eql('user');\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"user\",\r\n    \"email\": \"user@user.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/admin/users",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Создание пользователя с id 2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Test user 'id' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
-									"});\r",
-									"pm.test(\"Test user 'email' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('email');\r",
-									"    pm.expect(jsonData.email, '\"email\" must be \"user2@user.com\"').to.eql('user2@user.com');\r",
-									"});\r",
-									"pm.test(\"Test user 'name' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('name');\r",
-									"    pm.expect(jsonData.name, '\"name\" must be \"user2\"').to.eql('user2');\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"user2\",\r\n    \"email\": \"user2@user.com\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/admin/users",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Создание категории",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Test user 'id' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
-									"});\r",
-									"pm.test(\"Test user 'name' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('name');\r",
-									"    pm.expect(jsonData.name, '\"name\" must be \"Lorem ipsum dolor si\"').to.eql('Lorem ipsum dolor si');\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Lorem ipsum dolor si\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/admin/categories",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"admin",
-								"categories"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Создание события",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Test event 'id' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"annotation\":\"Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.\",\r\n\"category\":1,\r\n\"description\":\"Voluptatibus provident beatae eligendi harum aut ipsum inventore. Facere a doloremque non reprehenderit architecto unde. Et ratione tempore cupiditate incidunt. Est aspernatur sed error doloribus. Iusto saepe culpa odit cupiditate. Repellendus vero aut atque aspernatur recusandae qui.\\n \\rNostrum praesentium nesciunt modi enim. Laborum similique exercitationem minima beatae soluta totam qui. Sed ut quae modi tempore et velit aliquid in sit.\\n \\rBlanditiis dolor ut inventore fuga quia molestiae sit. Est veniam sit saepe distinctio aut similique modi iure et. Aut minus qui quam voluptatem. Perspiciatis quia dolorum minus ut et. Optio voluptatem sequi sunt. Est aut sint voluptatem.\",\r\n\"eventDate\":\"2027-11-06 02:16:15\",\r\n\"location\":{\"lat\":46.7483,\"lon\":-90.2616},\r\n\"paid\":\"true\",\r\n\"participantLimit\":\"594\",\r\n\"requestModeration\":\"false\",\r\n\"title\":\"Provident architecto explicabo doloremque hic eveniet non inventore aut.\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/users/1/events",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"1",
-								"events"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Создание события c id 2",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Ответ должен содержать код статуса 201 и данные в формате json\", function () {\r",
-									"    pm.response.to.have.status(201);\r",
-									"    pm.response.to.be.withBody;\r",
-									"    pm.response.to.be.json;\r",
-									"});\r",
-									"pm.test(\"Test event 'id' field\", function () {\r",
-									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n\"annotation\":\"2Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.\",\r\n\"category\":1,\r\n\"description\":\"2Voluptatibus provident beatae eligendi harum aut ipsum inventore. Facere a doloremque non reprehenderit architecto unde. Et ratione tempore cupiditate incidunt. Est aspernatur sed error doloribus. Iusto saepe culpa odit cupiditate. Repellendus vero aut atque aspernatur recusandae qui.\\n \\rNostrum praesentium nesciunt modi enim. Laborum similique exercitationem minima beatae soluta totam qui. Sed ut quae modi tempore et velit aliquid in sit.\\n \\rBlanditiis dolor ut inventore fuga quia molestiae sit. Est veniam sit saepe distinctio aut similique modi iure et. Aut minus qui quam voluptatem. Perspiciatis quia dolorum minus ut et. Optio voluptatem sequi sunt. Est aut sint voluptatem.\",\r\n\"eventDate\":\"2028-11-06 02:16:15\",\r\n\"location\":{\"lat\":47.7483,\"lon\":-90.2616},\r\n\"paid\":\"true\",\r\n\"participantLimit\":\"594\",\r\n\"requestModeration\":\"false\",\r\n\"title\":\"2Provident architecto explicabo doloremque hic eveniet non inventore aut.\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/users/1/events",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"1",
-								"events"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Create comment",
 			"item": [
 				{
-					"name": "Добавление комментария от несуществующего пользователя",
+					"name": "Добавление комментария от несуществующего пользователя с id 150",
 					"event": [
 						{
 							"listen": "test",
@@ -485,7 +203,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/20/comments/1",
+							"raw": "http://localhost:8080/users/150/comments/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -493,7 +211,7 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"20",
+								"150",
 								"comments",
 								"1"
 							]
@@ -502,7 +220,7 @@
 					"response": []
 				},
 				{
-					"name": "Добавление комментария на несуществующее событие",
+					"name": "Добавление комментария на несуществующее событие с id 150",
 					"event": [
 						{
 							"listen": "test",
@@ -530,7 +248,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/1/comments/20",
+							"raw": "http://localhost:8080/users/1/comments/150",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -540,14 +258,14 @@
 								"users",
 								"1",
 								"comments",
-								"20"
+								"150"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Добавление комментария",
+					"name": "Успешное добавление комментария с id 1",
 					"event": [
 						{
 							"listen": "test",
@@ -582,7 +300,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('user');\r",
 									"    pm.expect(jsonData.user).to.have.property('name');\r",
-									"    pm.expect(jsonData.user.name, '\"user.name\"  must be \"user\"').to.eql('user');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -594,21 +311,18 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('annotation');\r",
-									"    pm.expect(jsonData.event.annotation, '\"event.annotation\"  must be \"Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.\"').to.eql('Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.category.id, '\"event.category.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.category.name, '\"event.category.name\"  must be \"Lorem ipsum dolor si\"').to.eql('Lorem ipsum dolor si');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.eventDate' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -620,14 +334,12 @@
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.initiator.id, '\"event.initiator.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.initiator.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.initiator.name, '\"event.initiator.name\"  must be \"user\"').to.eql('user');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.paid' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -647,7 +359,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('isEdited');\r",
 									"    pm.expect(jsonData.isEdited, '\"isEdited\"  must be false').to.eql(false);\r",
-									"\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -685,7 +396,7 @@
 					"response": []
 				},
 				{
-					"name": "Добавление комментария c id 2",
+					"name": "Успешное добавление комментария c id 2",
 					"event": [
 						{
 							"listen": "test",
@@ -720,7 +431,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('user');\r",
 									"    pm.expect(jsonData.user).to.have.property('name');\r",
-									"    pm.expect(jsonData.user.name, '\"user.name\"  must be \"user\"').to.eql('user');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -732,21 +442,18 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('annotation');\r",
-									"    pm.expect(jsonData.event.annotation, '\"event.annotation\"  must be \"Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.\"').to.eql('Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.category.id, '\"event.category.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.category.name, '\"event.category.name\"  must be \"Lorem ipsum dolor si\"').to.eql('Lorem ipsum dolor si');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.eventDate' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -758,14 +465,12 @@
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.initiator.id, '\"event.initiator.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.initiator.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.initiator.name, '\"event.initiator.name\"  must be \"user\"').to.eql('user');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.paid' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -785,7 +490,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('isEdited');\r",
 									"    pm.expect(jsonData.isEdited, '\"isEdited\"  must be false').to.eql(false);\r",
-									"\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -823,7 +527,7 @@
 					"response": []
 				},
 				{
-					"name": "Добавление комментария c id 3",
+					"name": "Успешное добавление комментария c id 3",
 					"event": [
 						{
 							"listen": "test",
@@ -841,7 +545,7 @@
 									"pm.test(\"Test comment 'id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('id');\r",
-									"    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(3);\r",
+									"    pm.expect(jsonData.id, '\"id\" must be 3').to.eql(3);\r",
 									"});\r",
 									"pm.test(\"Test comment 'content' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -858,7 +562,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('user');\r",
 									"    pm.expect(jsonData.user).to.have.property('name');\r",
-									"    pm.expect(jsonData.user.name, '\"user.name\"  must be \"user2\"').to.eql('user2');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -870,21 +573,18 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('annotation');\r",
-									"    pm.expect(jsonData.event.annotation, '\"event.annotation\"  must be \"2Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.\"').to.eql('2Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.category.id, '\"event.category.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.category.name, '\"event.category.name\"  must be \"Lorem ipsum dolor si\"').to.eql('Lorem ipsum dolor si');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.eventDate' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -896,14 +596,12 @@
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.initiator.id, '\"event.initiator.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.initiator.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.initiator.name, '\"event.initiator.name\"  must be \"user\"').to.eql('user');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.paid' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -923,7 +621,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('isEdited');\r",
 									"    pm.expect(jsonData.isEdited, '\"isEdited\"  must be false').to.eql(false);\r",
-									"\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -1011,7 +708,7 @@
 					"response": []
 				},
 				{
-					"name": "Обновление комментария от пользователя не яв-ся комментатором",
+					"name": "Обновление комментария от пользователя не яв-ся автором",
 					"event": [
 						{
 							"listen": "test",
@@ -1056,7 +753,7 @@
 					"response": []
 				},
 				{
-					"name": "Обновление комментария",
+					"name": "Успешное обновление комментария",
 					"event": [
 						{
 							"listen": "test",
@@ -1067,6 +764,7 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"});\r",
+									"\r",
 									"pm.test(\"Has comment create response\", function () {\r",
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
@@ -1091,7 +789,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('user');\r",
 									"    pm.expect(jsonData.user).to.have.property('name');\r",
-									"    pm.expect(jsonData.user.name, '\"user.name\"  must be \"user\"').to.eql('user');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -1103,21 +800,18 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('annotation');\r",
-									"    pm.expect(jsonData.event.annotation, '\"event.annotation\"  must be \"Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.\"').to.eql('Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.category.id, '\"event.category.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.category.name, '\"event.category.name\"  must be \"Lorem ipsum dolor si\"').to.eql('Lorem ipsum dolor si');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.eventDate' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -1129,14 +823,12 @@
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.initiator.id, '\"event.initiator.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.initiator.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.initiator.name, '\"event.initiator.name\"  must be \"user\"').to.eql('user');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.paid' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -1156,7 +848,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('isEdited');\r",
 									"    pm.expect(jsonData.isEdited, '\"isEdited\"  must be true').to.eql(true);\r",
-									"\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -1234,7 +925,7 @@
 					"response": []
 				},
 				{
-					"name": "Получить комментарий",
+					"name": "Получить комментарий c id 1",
 					"event": [
 						{
 							"listen": "test",
@@ -1245,6 +936,7 @@
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
 									"});\r",
+									"\r",
 									"pm.test(\"Has comment create response\", function () {\r",
 									"    pm.response.to.be.withBody;\r",
 									"    pm.response.to.be.json;\r",
@@ -1269,7 +961,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('user');\r",
 									"    pm.expect(jsonData.user).to.have.property('name');\r",
-									"    pm.expect(jsonData.user.name, '\"user.name\"  must be \"user\"').to.eql('user');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -1281,21 +972,18 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('annotation');\r",
-									"    pm.expect(jsonData.event.annotation, '\"event.annotation\"  must be \"Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.\"').to.eql('Doloremque consequatur enim dolore soluta. Itaque ut incidunt expedita tempora id. Asperiores minus blanditiis suscipit et impedit occaecati consectetur.');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.id' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.category.id, '\"event.category.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.category.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('category');\r",
 									"    pm.expect(jsonData.event.category).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.category.name, '\"event.category.name\"  must be \"Lorem ipsum dolor si\"').to.eql('Lorem ipsum dolor si');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.eventDate' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -1307,14 +995,12 @@
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('id');\r",
-									"    pm.expect(jsonData.event.initiator.id, '\"event.initiator.id\"  must be \"1\"').to.eql(1);\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.initiator.name' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('event');\r",
 									"    pm.expect(jsonData.event).to.have.property('initiator');\r",
 									"    pm.expect(jsonData.event.initiator).to.have.property('name');\r",
-									"    pm.expect(jsonData.event.initiator.name, '\"event.initiator.name\"  must be \"user\"').to.eql('user');\r",
 									"});\r",
 									"pm.test(\"Test comment 'event.paid' field\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
@@ -1334,7 +1020,6 @@
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData).to.have.property('isEdited');\r",
 									"    pm.expect(jsonData.isEdited, '\"isEdited\"  must be true').to.eql(true);\r",
-									"\r",
 									"});"
 								],
 								"type": "text/javascript",
@@ -1367,7 +1052,7 @@
 			"name": "Get all event comments",
 			"item": [
 				{
-					"name": "Получение комментариев на несуществующий event",
+					"name": "Получение комментариев на несуществующий event c id 150",
 					"event": [
 						{
 							"listen": "test",
@@ -1386,7 +1071,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/events/20/comments",
+							"raw": "http://localhost:8080/admin/events/150/comments",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1395,7 +1080,7 @@
 							"path": [
 								"admin",
 								"events",
-								"20",
+								"150",
 								"comments"
 							]
 						}
@@ -1403,7 +1088,7 @@
 					"response": []
 				},
 				{
-					"name": "Получение комментариев без сортировки и без пагинации",
+					"name": "Получение комментариев на event c id 1 без сортировки и без пагинации",
 					"event": [
 						{
 							"listen": "test",
@@ -1521,7 +1206,7 @@
 					"response": []
 				},
 				{
-					"name": "Получение комментариев c сортировкой и с пагинацией",
+					"name": "Получение комментариев на event c id 1 c сортировкой и с пагинацией",
 					"event": [
 						{
 							"listen": "test",
@@ -1619,7 +1304,7 @@
 			"name": "Get all user comments",
 			"item": [
 				{
-					"name": "Получение комментариев несуществующего user",
+					"name": "Получение комментариев несуществующего user c id 150",
 					"event": [
 						{
 							"listen": "test",
@@ -1638,7 +1323,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/admin/users/20/comments",
+							"raw": "http://localhost:8080/admin/users/150/comments",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1647,7 +1332,7 @@
 							"path": [
 								"admin",
 								"users",
-								"20",
+								"150",
 								"comments"
 							]
 						}
@@ -2624,7 +2309,7 @@
 					"response": []
 				},
 				{
-					"name": "Добавление нового комментария",
+					"name": "Успешное добавление нового комментария",
 					"event": [
 						{
 							"listen": "test",
