@@ -147,11 +147,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private Sort makeSort(Boolean sortByTime) {
-        if (sortByTime) {
-            return Sort.by("sendTime").descending();
-        } else {
-            return null;
-        }
+        return sortByTime ? Sort.by("sendTime").descending() : null;
     }
 
     private CommentEntity commentExistCheck(Long commentId) {
