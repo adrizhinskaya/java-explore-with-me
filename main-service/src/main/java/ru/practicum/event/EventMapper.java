@@ -6,6 +6,7 @@ import ru.practicum.categorie.CategoryMapper;
 import ru.practicum.categorie.model.CategoryEntity;
 import ru.practicum.categorie.model.dto.CategoryDto;
 import ru.practicum.event.model.EventEntity;
+import ru.practicum.event.model.dto.EventDto;
 import ru.practicum.event.model.dto.EventFullDto;
 import ru.practicum.event.model.dto.EventShortDto;
 import ru.practicum.event.model.dto.NewEventDto;
@@ -91,6 +92,20 @@ public class EventMapper {
                 .paid(entity.getPaid())
                 .title(entity.getTitle())
                 .views(views)
+                .build();
+    }
+
+    public EventDto toEventDto(EventEntity entity) {
+        CategoryDto categoryDto = categoryMapper.toCategoryDto(entity.getCategory());
+        UserShortDto userShortDto = userMapper.toUserShortDto(entity.getInitiator());
+        return EventDto.builder()
+                .id(entity.getId())
+                .annotation(entity.getAnnotation())
+                .category(categoryDto)
+                .eventDate(entity.getEventDate())
+                .initiator(userShortDto)
+                .paid(entity.getPaid())
+                .title(entity.getTitle())
                 .build();
     }
 
